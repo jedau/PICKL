@@ -11,7 +11,7 @@ let cliTags = ''
 for (let i = 0; i < args.length; i++) {
   const arg = args[i]
   if (arg === '--tags' && args[i + 1]) {
-    cliTags = args[i + 1] ?? ''
+    cliTags = args[i + 1]
     i++ // Skip next argument as it's the tag value
   } else if (arg && !arg.startsWith('--')) {
     featurePath = arg
