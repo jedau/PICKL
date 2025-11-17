@@ -508,7 +508,7 @@ await page.goto('/login', { waitUntil: 'domcontentloaded' })
 
 ---
 
-## 📋 Step Definition Errors
+## Step Definition Errors
 
 ### Error: "cannot read property 'page' of undefined"
 
