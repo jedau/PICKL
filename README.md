@@ -41,14 +41,33 @@ PICKL is a modern BDD test automation boilerplate that combines Playwright's pow
 
 ## 📚 Documentation
 
-Read on for more information on how to use PICKL:
+### 🚀 Getting Started
 
-- [Getting Started](docs/GETTING-STARTED.md) - Installation and setup
-- [Writing Tests](docs/WRITING-TESTS.md) - Creating feature files and step definitions
-- [Running Tests](docs/RUNNING-TESTS.md) - Executing tests with various options
+- [Getting Started](docs/GETTING-STARTED.md) - Installation and initial setup guide
+- [Running Tests](docs/RUNNING-TESTS.md) - Complete guide to executing tests
+
+### 📖 Learning & Training
+
+- [Learning Path](docs/LEARNING-PATH.md) - Structured 4-week curriculum
+- [Training Exercises](docs/TRAINING-EXERCISES.md) - Hands-on practice exercises
+- [Common Mistakes](docs/COMMON-MISTAKES.md) - Avoid these 28 common pitfalls
+
+### 📚 Reference
+
+- [Writing Tests](docs/WRITING-TESTS.md) - Gherkin syntax and feature file basics
+- [API Reference](docs/API-REFERENCE.md) - Complete API documentation
+- [Architecture](docs/ARCHITECTURE.md) - Framework patterns and internals
+
+### 🤝 Contributing
+
+- [Contributing Guide](docs/CONTRIBUTING.md) - How to contribute to PICKL
 - [Branching Strategy](docs/BRANCHING-STRATEGY.md) - Git workflow guidelines
-- [Creating/Reviewing a Pull Request](docs/PULL-REQUEST.md) - PR best practices
+- [Pull Request Guide](docs/PULL-REQUEST.md) - PR best practices
 - [Naming Convention](docs/NAMING-CONVENTION.md) - Code naming standards
+
+### 🔧 Support
+
+- [Troubleshooting](docs/TROUBLESHOOTING.md) - Solutions for common errors
 
 ## 🚀 Quick Start
 
@@ -77,7 +96,3 @@ npm run report
 - **cucumber-html-reporter** v7.2.0 - HTML report generation
 - **tsx** v4.20.6 - TypeScript execution
 - **ESLint** + **Prettier** - Code quality tools
-
----
-
-**Made with 🥒 by the PICKL team**

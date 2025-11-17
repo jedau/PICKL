@@ -78,8 +78,20 @@ So you want to start doing automation? Well, you came to the right place! Follow
 
 - Congratulations on making it this far! That wasn't so hard, wasn't it!? Wasn't it? :confused:
 - In a terminal pointing to the `PICKL` repository, run `npm test` and watch the magic happen. This should run all of the available tests. If it doesn't, try to retrace your steps and see if you're missing anything
-- If you want to run just specific test scenarios, be sure to add a tag above the scenario (i.e. `@<YOUR-TAG-HERE>` and then run `npm test --TAGS="@<YOUR-TAG-HERE>"` instead
-  If you feel like the steps are what's missing, feel free to bring it up in the issues section so we can fill in the gaps or check out the section below in case your questions are answered there.
+- If you encounter any errors, check the [Troubleshooting Guide](TROUBLESHOOTING.md) for solutions
+- For comprehensive test execution options (tags, browsers, specific files, etc.), see the [Running Tests Guide](RUNNING-TESTS.md)
+
+### 7. What's Next?
+
+Now that you have PICKL set up, here are your next steps:
+
+**For Learners**: Follow the structured [Learning Path](LEARNING-PATH.md) - a 4-week curriculum to master BDD automation.
+
+**For Contributors**: Read the [Contributing Guide](CONTRIBUTING.md) to understand coding standards and workflow.
+
+**For Test Writers**: Review [Writing Tests](WRITING-TESTS.md) for Gherkin syntax and [API Reference](API-REFERENCE.md) for available Page Objects.
+
+**Need Help?**: Check [Common Mistakes](COMMON-MISTAKES.md) to avoid pitfalls and [Troubleshooting](TROUBLESHOOTING.md) if you encounter issues.
 
 ---
 
@@ -95,4 +107,17 @@ So you weren't able to successfully set up your local on your first try. That's 
 
 > Of course not! With NVM, you can maintain multiple versions of NodeJS at the same time. You can install the latest stable for this, and the specific node version for the other projects. You can switch node versions by using `node use <VERSION>` on your terminal whenever you want to use a different version of NodeJS
 
-You didn't find the answer you were looking for? Open an issue on the repository and we'll work it out!
+You didn't find the answer you were looking for? Check the [Troubleshooting Guide](TROUBLESHOOTING.md) or open an issue on the repository and we'll work it out!
+
+---
+
+## Related Documentation
+
+- [Running Tests](RUNNING-TESTS.md) - Complete guide to executing tests with various options
+- [Writing Tests](WRITING-TESTS.md) - Learn Gherkin syntax and create feature files
+- [Learning Path](LEARNING-PATH.md) - Follow a structured 4-week training curriculum
+- [Contributing Guide](CONTRIBUTING.md) - Guidelines for contributing to PICKL
+- [Troubleshooting](TROUBLESHOOTING.md) - Solutions for common setup and execution issues
+- [Common Mistakes](COMMON-MISTAKES.md) - Avoid these 28 common pitfalls
+
+[⬆️ Back to Top](#getting-started)
