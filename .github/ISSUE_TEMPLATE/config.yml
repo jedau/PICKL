@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/jedau/PICKL/discussions
+    about: For general discussions, ideas, and community support
+  - name: 📖 Documentation
+    url: https://github.com/jedau/PICKL/tree/main/docs
+    about: Check out our comprehensive documentation
+  - name: 🎓 Training Exercises
+    url: https://github.com/jedau/PICKL/blob/main/docs/TRAINING-EXERCISES.md
+    about: Learn PICKL through hands-on exercises
