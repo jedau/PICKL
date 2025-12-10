@@ -70,15 +70,15 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-          # Ensure we're on a proper branch (CI might be in detached HEAD)
-          git checkout -B temp-ci-branch
-
-          # Create test file and branch
+          # Create a test file
           echo "// test file" > test-hook-verification.js
           git add test-hook-verification.js
+
+          # Test that hook allows commits on feature branch
+          echo "Testing hook on feature branch..."
           git checkout -b test-hook-branch
 
-          # Test hook allows commits on feature branch
+          # The hook should allow this commit
           if git commit -m "test: verify hook allows commits on feature branch"; then
             echo "✅ Hook correctly allows commits on feature branch"
           else
@@ -87,9 +87,12 @@ jobs:
           fi
 
           # Clean up
-          git checkout temp-ci-branch
+          git reset --hard HEAD~1
+          git checkout -
           git branch -D test-hook-branch
           rm -f test-hook-verification.js
+
+          echo "🎉 Pre-commit hook tests passed!"
 
   test:
     name: Test (Node ${{ matrix.node-version }})
