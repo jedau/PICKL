@@ -1,0 +1,99 @@
+name: 🔒 Security Vulnerability Report
+description: Report a security vulnerability (private disclosure recommended)
+labels: ['security', 'needs-triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Security Vulnerability Report
+
+        **Please do not disclose security vulnerabilities publicly.**
+
+        For sensitive security issues, please report privately by:
+        1. Going to the [Security tab](../../security)
+        2. Click "Report a vulnerability"
+        3. Or email: jedaureus.gonzales@gmail.com
+
+        Use this form only for non-sensitive security issues.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this vulnerability?
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Vulnerability Description
+      description: Describe the security vulnerability
+      placeholder: What is the security issue?
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected Components
+      description: Which parts of the codebase are affected?
+      placeholder: |
+        - File: path/to/file.ts
+        - Function: functionName()
+        - Version: v0.1.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: exploit
+    attributes:
+      label: Steps to Reproduce
+      description: How can this vulnerability be exploited?
+      placeholder: |
+        1. Navigate to...
+        2. Execute...
+        3. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: What is the potential impact of this vulnerability?
+      placeholder: What could an attacker do with this vulnerability?
+    validations:
+      required: true
+
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Suggested Fix
+      description: Do you have suggestions for fixing this?
+      placeholder: Potential solutions or mitigations
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Any relevant CVEs, articles, or documentation
+      placeholder: |
+        - CVE-XXXX-XXXXX
+        - https://example.com/advisory
+
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Disclosure Agreement
+      description: Please confirm your understanding of our security policy
+      options:
+        - label: I have read the [Security Policy](../../security/policy)
+          required: true
+        - label: I understand this report may be handled privately
+          required: true

@@ -1,6 +1,7 @@
 # PICKL 🥒
 
 [![CI](https://github.com/jedau/PICKL/actions/workflows/ci.yml/badge.svg)](https://github.com/jedau/PICKL/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/jedau/PICKL/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jedau/PICKL/actions/workflows/codeql-analysis.yml)
 
 **P**laywright **I**ntegrated with **C**ucumber **K**ickoff **L**aunchpad
 
