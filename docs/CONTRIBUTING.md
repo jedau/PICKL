@@ -182,6 +182,155 @@ ls -la .husky/
 # Should see: pre-commit, commit-msg
 ```
 
+### VS Code Workspace Configuration
+
+PICKL includes comprehensive VS Code workspace settings to enhance your development experience. The workspace is pre-configured with:
+
+#### Workspace Settings (`.vscode/settings.json`)
+
+The project includes optimized settings for:
+
+- **Auto-formatting** on save with Prettier
+- **ESLint** auto-fix on save
+- **Import organization** automatically
+- **Consistent editor behavior** (tabs, line endings, rulers)
+- **Optimized search** excluding `node_modules` and test artifacts
+- **Cucumber integration** for Gherkin files
+
+#### Debug Configurations (`.vscode/launch.json`)
+
+Five debugging configurations are available via the Debug panel (Ctrl+Shift+D / Cmd+Shift+D):
+
+1. **Debug Current Feature File** - Debug the currently open `.feature` file
+   - Opens browser in headed mode (HEADLESS=false)
+   - Stops at breakpoints in step definitions
+   - **Usage:** Open a `.feature` file and press **F5** (or click the green play button in Run and Debug panel)
+   - **Example:** Open `test/features/login.feature`, set breakpoint in `test/steps/login.steps.ts`, press F5 or use Run and Debug
+
+2. **Debug All Tests** - Debug all test suites
+   - Runs entire test suite with debugger attached
+   - Useful for investigating issues across multiple features
+   - **Usage:** Select "Debug All Tests" from debug dropdown, press **F5** (or click the green play button)
+
+3. **Debug Specific Scenario (by line)** - Debug a single scenario
+   - Opens the feature file
+   - Place cursor on any line within the scenario you want to debug
+   - Press **F5** (or click the green play button) to debug only that scenario
+   - **Usage:** Open `.feature` file → Click on scenario line → Press **F5** or use Run and Debug
+
+4. **Debug with Tag** - Debug tests matching a specific tag
+   - Prompts you to select a tag: `@smoke`, `@positive`, `@negative`, `@regression`, `@fail`, `@skip`
+   - Runs all tests matching the selected tag
+   - **Usage:** Select "Debug with Tag" from dropdown → Press **F5** (or click green play button) → Select tag from prompt
+   - You can also type custom tag expressions like `@smoke and @positive` or `not @skip`
+
+5. **Attach to Node Process** - Attach to running Node process
+   - For advanced debugging scenarios
+   - Use when manually starting tests with `--inspect` or `--inspect-brk` flag
+
+#### Debugging Tips
+
+**Setting Breakpoints:**
+
+- Click the left gutter (line numbers area) in step definition files to set breakpoints
+- Breakpoints work reliably in **step definition files** (`test/steps/**/*.ts`)
+- Breakpoints in **page object files** (`pages/**/*.ts`) may not work due to TypeScript transpilation
+
+**Debugging Keyboard Shortcuts:**
+
+- **F5** - Start debugging / Continue execution
+- **F10** - Step Over (execute current line, move to next)
+- **F11** - Step Into (go inside function calls)
+- **Shift+F11** - Step Out (exit current function)
+- **Ctrl+Shift+F5** - Restart debugging
+- **Shift+F5** - Stop debugging
+
+**Debugging Page Objects:**
+Since breakpoints in page objects don't always work reliably, use **F11 (Step Into)** from a step breakpoint:
+
+```typescript
+// test/steps/login.steps.ts
+When('I enter username {string}', async function (username: string) {
+  const loginPage = new LoginPage(this.page)
+  await loginPage.enterUsername(username) // <-- Set breakpoint here, press F11 to step into
+})
+```
+
+Press **F11** on the `enterUsername()` call to step into the page object method.
+
+**Auto Attach Setting:**
+For the best debugging experience, set VS Code's Auto Attach to **"Only With Flag"**:
+
+1. Press **Ctrl+Shift+P** (Cmd+Shift+P on Mac)
+2. Type: `"Debug: Toggle Auto Attach"`
+3. Select **"Only With Flag"**
+
+This ensures the debugger only attaches when using F5 or the Run and Debug panel, not during normal test runs.
+
+#### Debugging FAQ
+
+**Q: Why does "Waiting for the debugger to disconnect..." appear 3 times?**
+
+A: This is normal! When debugging through npm scripts, VS Code attaches to each process in the chain:
+
+- npm process
+- tsx (TypeScript runtime) process
+- cucumber.js process
+
+Each shows the message when finishing. This is cosmetic and doesn't affect functionality.
+
+**Q: Why don't breakpoints work in my page object files?**
+
+A: TypeScript transpilation with tsx makes source maps unreliable for page objects. Use **F11 (Step Into)** from a step definition breakpoint to debug into page objects, or add temporary `console.log()` statements.
+
+**Q: Can I debug tests in headless mode?**
+
+A: By default, debug configurations run with `HEADLESS=false` so you can see the browser. To debug in headless mode, edit `.vscode/launch.json` and change `"HEADLESS": "false"` to `"HEADLESS": "true"` for the configuration you're using.
+
+**Q: How do I debug a test that's failing in CI but passing locally?**
+
+A: Use the "Debug with Tag" configuration and select the tag used in CI (e.g., `@regression` or `@smoke`). You can also set `HEADLESS=true` in launch.json to match CI conditions more closely.
+
+**Q: The debugger isn't stopping at my breakpoints.**
+
+A: Ensure:
+
+1. You set breakpoints in **step definition files** (`test/steps/**/*.ts`), not page objects
+2. The feature file you're debugging actually executes that step
+3. Auto Attach is set to "Only With Flag"
+4. You're using F5 or the Run and Debug panel (not running `npm test` in terminal)
+
+#### Tasks (`.vscode/tasks.json`)
+
+Quick access to common commands via Terminal > Run Task (Ctrl+Shift+P → "Tasks: Run Task"):
+
+- **Run Current Feature File** - Test the currently open feature file (Ctrl+Shift+B)
+- **Run All Tests** - Execute complete test suite
+- **Run Smoke Tests** - Execute only `@smoke` tagged tests
+- **Generate Report** - Create HTML test report
+- **Lint** - Run ESLint checks
+- **Format** - Format all code with Prettier
+- **Clean Test Results** - Remove test artifacts
+- **Install Dependencies** - Run npm install
+- **Verify Hooks** - Check git hooks status
+
+**Quick Tip:** Press `Ctrl+Shift+B` (Cmd+Shift+B on Mac) to run the default task (Run Current Feature File).
+
+#### Recommended Extensions (`.vscode/extensions.json`)
+
+VS Code will prompt to install these recommended extensions:
+
+- **EditorConfig** - Maintain consistent coding styles
+- **ESLint** - JavaScript/TypeScript linting
+- **Prettier** - Code formatting
+- **Playwright Test** - Playwright support
+- **TODO Tree** - Highlight TODO/FIXME comments
+- **Cucumber** - Gherkin syntax support
+
+**To install all at once:** Open Command Palette (Ctrl+Shift+P / Cmd+Shift+P) → "Extensions: Show Recommended Extensions" → Click "Install Workspace Extension Recommendations"
+
+---
+
 ### VS Code Extensions
 
 Install the recommended extensions for the best development experience (see [Getting Started - Extensions](GETTING-STARTED.md#5-finishing-touches)):

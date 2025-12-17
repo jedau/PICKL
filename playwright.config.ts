@@ -42,11 +42,14 @@ export default defineConfig({
     /* Take screenshot of failure */
     screenshot: 'only-on-failure',
 
-    /* Record Video */
-    video: {
-      mode: 'retain-on-failure',
-      size: { width: 1280, height: 720 },
-    },
+    /* Record Video - disabled in debug mode */
+    video:
+      process.env.HEADLESS === 'false'
+        ? 'off'
+        : {
+            mode: 'retain-on-failure',
+            size: { width: 1280, height: 720 },
+          },
   },
 
   /* Configure projects for major browsers */

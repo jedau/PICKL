@@ -1,7 +1,7 @@
-import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from '@cucumber/cucumber'
+import { After, AfterAll, Before, BeforeAll, Status, setDefaultTimeout } from '@cucumber/cucumber'
 import { Browser, chromium, firefox, webkit } from '@playwright/test'
-import { readFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
+import { mkdir, readFile } from 'fs/promises'
 import { ICustomWorld } from './world.js'
 
 // Set timeout for all hooks and steps
@@ -86,9 +86,9 @@ After(async function (this: ICustomWorld, { pickle, result }) {
       this.attach(screenshot, 'image/png')
     }
 
-    // Video
+    // Video - only in headless mode
     const video = page?.video()
-    if (video) {
+    if (video && process.env.HEADLESS !== 'false') {
       try {
         const videoPath = await video.path()
         const videoBuffer = await readFile(videoPath)

@@ -1,6 +1,6 @@
 import eslint from '@eslint/js'
-import tseslint from 'typescript-eslint'
 import prettierConfig from 'eslint-config-prettier'
+import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   // Base ESLint recommended rules
@@ -40,6 +40,7 @@ export default tseslint.config(
 
       // General code quality rules
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-debugger': 'warn', // Allow debugger for development/debugging
       'prefer-const': 'error',
       'no-var': 'error',
       eqeqeq: ['error', 'always'],

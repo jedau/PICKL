@@ -7,6 +7,7 @@
     "clean": "node -e \"require('fs').rmSync('test-results', {recursive: true, force: true})\"",
     "clean:all": "tsx scripts/cleanup.ts",
     "test": "node scripts/run-test.ts",
+    "test:debug": "tsx --import dotenv/config --enable-source-maps node_modules/@cucumber/cucumber/bin/cucumber.js --import test/support/**/*.ts --import test/steps/**/*.ts --format ./test/support/verbose-formatter.ts",
     "test:chromium": "cross-env BROWSER=chromium npm test",
     "test:firefox": "cross-env BROWSER=firefox npm test",
     "test:webkit": "cross-env BROWSER=webkit npm test",
