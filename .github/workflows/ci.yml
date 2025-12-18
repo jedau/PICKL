@@ -262,6 +262,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -303,7 +306,7 @@ jobs:
         with:
           name: screenshots
           path: test-results/**/*.png
-          retention-days: 7
+          retention-days: 30
 
       - name: Upload videos on failure
         if: failure()
@@ -311,4 +314,58 @@ jobs:
         with:
           name: videos
           path: test-results/**/*.webm
-          retention-days: 7
+          retention-days: 30
+
+      - name: Generate PR comment
+        if: always() && github.event_name == 'pull_request'
+        run: npm run report:pr
+        continue-on-error: true
+
+      - name: Post PR comment
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const commentPath = 'test-results/pr-comment.md';
+
+            if (!fs.existsSync(commentPath)) {
+              console.log('No PR comment file found, skipping...');
+              return;
+            }
+
+            const comment = fs.readFileSync(commentPath, 'utf8')
+              .replace(/\$\{GITHUB_REPOSITORY\}/g, context.repo.owner + '/' + context.repo.repo)
+              .replace(/\$\{GITHUB_RUN_ID\}/g, context.runId);
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Test Results')
+            );
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+              console.log('Updated existing PR comment');
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+              console.log('Created new PR comment');
+            }

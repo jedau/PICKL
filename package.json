@@ -16,6 +16,7 @@
     "test:regression": "cross-env TAGS=@regression npm test",
     "test:clean": "npm run clean && npm run test",
     "report": "node scripts/generate-report.ts",
+    "report:pr": "tsx scripts/generate-pr-comment.ts",
     "lint": "eslint . --ext .ts",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "validate:env": "tsx scripts/validate-env.ts",

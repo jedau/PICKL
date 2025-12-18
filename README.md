@@ -20,10 +20,12 @@ PICKL is a modern BDD test automation boilerplate that combines Playwright's pow
 ### 📊 Reporting
 
 - **HTML Reports** - Beautiful single-page reports with cucumber-html-reporter
+- **Automated PR Comments** - Test results automatically posted to pull requests with pass/fail summary
 - **Dark Mode Toggle** - Built-in light/dark theme switcher with localStorage persistence
 - **Custom Favicon** - Distinctive pickle emoji 🥒 branding
 - **Auto-open Reports** - Reports automatically open in your browser after generation
 - **JSON Export** - Raw test results for CI/CD integration
+- **Artifact Retention** - Test results, screenshots, and videos stored for 30 days
 
 ### 🛠️ Developer Experience
 
