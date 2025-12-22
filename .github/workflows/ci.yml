@@ -285,6 +285,8 @@ jobs:
       - name: Run tests
         run: npm test
         continue-on-error: true # External test site may be unreachable
+        env:
+          BASE_URL: https://the-internet.herokuapp.com
 
       - name: Generate HTML report
         if: always()
@@ -346,7 +348,7 @@ jobs:
             });
 
             const botComment = comments.find(comment =>
-              comment.user.type === 'Bot' &&
+              comment.user.login === 'github-actions[bot]' &&
               comment.body.includes('Test Results')
             );
 
