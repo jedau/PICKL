@@ -1,0 +1,99 @@
+{
+  // TypeScript Configuration
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // Editor Formatting
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.rulers": [80, 120],
+  "editor.wordWrap": "on",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+
+  // Files Configuration
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/test-results": true,
+    "**/.playwright": true,
+    "**/coverage": true,
+    "**/.nyc_output": true
+  },
+
+  // Search Configuration
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/test-results": true,
+    "**/coverage": true,
+    "**/.playwright": true,
+    "**/package-lock.json": true
+  },
+
+  // ESLint Configuration
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.format.enable": true,
+  "eslint.codeActionsOnSave.mode": "all",
+
+  // Cucumber Configuration
+  "cucumber.features": ["test/features/**/*.feature"],
+  "cucumber.glue": ["test/steps/**/*.ts", "test/support/**/*.ts"],
+  "cucumber.parameterTypes": [],
+
+  // Testing Configuration
+  "testing.automaticallyOpenPeekView": "never",
+
+  // Debug Configuration
+  "debug.javascript.autoAttachFilter": "onlyWithFlag",
+
+  // Terminal Configuration
+  "terminal.integrated.env.windows": {
+    "NODE_ENV": "development"
+  },
+  "terminal.integrated.env.linux": {
+    "NODE_ENV": "development"
+  },
+  "terminal.integrated.env.osx": {
+    "NODE_ENV": "development"
+  },
+
+  // Git Configuration
+  "git.ignoreLimitWarning": true,
+  "git.autofetch": true,
+
+  // Language-Specific Settings
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[feature]": {
+    "editor.defaultFormatter": null,
+    "editor.tabSize": 2
+  }
+}

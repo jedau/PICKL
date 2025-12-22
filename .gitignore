@@ -16,7 +16,6 @@ dist/
 .env.*.local
 
 # IDE / Editor
-.vscode/settings.json
 .idea/
 *.swp
 *.swo
