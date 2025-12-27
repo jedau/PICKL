@@ -1317,4 +1317,32 @@ Quick debugging options:
 
 ---
 
+## VS Code Snippets
+
+This project includes VS Code snippets to help speed up common development patterns.
+
+### Available Snippets
+
+- **page-object**: Generates a boilerplate for page object files.
+- **step-definition**: Generates a boilerplate for step definition files.
+- **feature-file**: Generates a boilerplate for feature files.
+- **gherkin-scenario**: Generates a basic Gherkin scenario structure.
+
+### How to use
+
+1. Open VS Code.
+2. Open a file where the snippet applies.
+3. Type the snippet prefix (for example: `page-object`).
+4. Press `Tab` or `Enter` to insert the snippet.
+
+### Contributing new snippets
+
+To add a new snippet:
+1. Edit the file `vscode/pickl.code-snippets`.
+2. Follow the existing snippet structure.
+3. Use clear and descriptive prefixes.
+4. Update this documentation if necessary.
+
+---
+
 **Thank you for contributing to PICKL! 🥒**

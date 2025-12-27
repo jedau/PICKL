@@ -1,0 +1,69 @@
+{
+  "PICKL Page Object": {
+    "prefix": "page-object",
+    "body": [
+      "import { Page } from '@playwright/test';",
+      "",
+      "export class ${1:PageName}Page {",
+      "  readonly page: Page;",
+      "",
+      "  constructor(page: Page) {",
+      "    this.page = page;",
+      "  }",
+      "",
+      "  async ${2:actionName}() {",
+      "    // implement action",
+      "  }",
+      "}",
+    ],
+    "description": "PICKL boilerplate for a Playwright Page Object",
+  },
+
+  "PICKL Step Definition": {
+    "prefix": "step-definition",
+    "body": [
+      "import { Given, When, Then } from '@cucumber/cucumber';",
+      "import { Page } from '@playwright/test';",
+      "",
+      "let page: Page;",
+      "",
+      "Given('${1:some precondition}', async function () {",
+      "  // setup code",
+      "});",
+      "",
+      "When('${2:some action}', async function () {",
+      "  // action code",
+      "});",
+      "",
+      "Then('${3:some outcome}', async function () {",
+      "  // assertion code",
+      "});",
+    ],
+    "description": "PICKL boilerplate for Cucumber step definitions",
+  },
+
+  "PICKL Feature File": {
+    "prefix": "feature-file",
+    "body": [
+      "Feature: ${1:Feature description}",
+      "",
+      "  Scenario: ${2:Scenario description}",
+      "    Given ${3:some precondition}",
+      "    When ${4:some action}",
+      "    Then ${5:some expected result}",
+    ],
+    "description": "PICKL boilerplate for Cucumber feature files",
+  },
+
+  "PICKL Gherkin Scenario": {
+    "scope": "gherkin",
+    "prefix": "gherkin-scenario",
+    "body": [
+      "  Scenario: ${1:Scenario description}",
+      "    Given ${2:some precondition}",
+      "    When ${3:some action}",
+      "    Then ${4:some expected result}",
+    ],
+    "description": "PICKL boilerplate for a Gherkin scenario",
+  }
+}
