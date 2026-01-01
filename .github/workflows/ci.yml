@@ -26,9 +26,9 @@ jobs:
           # Get code owners from CODEOWNERS file dynamically
           if [ -f ".github/CODEOWNERS" ]; then
             # Extract individual GitHub usernames (not teams)
-            # Pattern: @username (alphanumerics and hyphens, no teams like @org/team)
-            # GitHub usernames: start with alphanumeric, can contain hyphens
-            CODE_OWNERS=$(grep -oE '@[a-zA-Z0-9][a-zA-Z0-9-]*' .github/CODEOWNERS | grep -v '/' | sed 's/@//' | sort -u)
+            # Pattern: @username (alphanumerics, underscores and hyphens, no teams like @org/team)
+            # GitHub usernames: start with alphanumeric, can contain underscores and hyphens
+            CODE_OWNERS=$(grep -oE '@[a-zA-Z0-9][a-zA-Z0-9_-]*' .github/CODEOWNERS | grep -v '/' | sed 's/@//' | sort -u)
           else
             # Fallback if CODEOWNERS doesn't exist
             CODE_OWNERS=""
