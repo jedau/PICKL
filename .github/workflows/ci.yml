@@ -36,6 +36,12 @@ jobs:
 
           PR_AUTHOR="${{ github.event.pull_request.user.login }}"
 
+          # Skip validation for bots (Dependabot, Renovate, etc.)
+          if [[ "$PR_AUTHOR" == *"[bot]" || "$PR_AUTHOR" == "dependabot"* || "$PR_AUTHOR" == "renovate"* ]]; then
+            echo "🤖 Validation skipped: $PR_AUTHOR is an automated bot"
+            exit 0
+          fi
+
           # Check if PR author is in code owners list
           IS_CODE_OWNER=false
           for OWNER in $CODE_OWNERS; do
