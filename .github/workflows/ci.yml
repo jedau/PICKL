@@ -35,11 +35,18 @@ jobs:
           fi
 
           PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          PR_AUTHOR_TYPE="${{ github.event.pull_request.user.type }}"
+
+          # Skip validation for bot accounts (GitHub account type = "Bot")
+          if [ "$PR_AUTHOR_TYPE" = "Bot" ]; then
+            echo "🤖 Validation skipped: $PR_AUTHOR is a bot account (type: $PR_AUTHOR_TYPE)"
+            exit 0
+          fi
 
           # Check if PR author is in code owners list
           IS_CODE_OWNER=false
           for OWNER in $CODE_OWNERS; do
-            if [ "$PR_AUTHOR" == "$OWNER" ]; then
+            if [ "$PR_AUTHOR" = "$OWNER" ]; then
               IS_CODE_OWNER=true
               break
             fi
