@@ -626,6 +626,16 @@ npm test               # Full test suite
 npm run report         # Generate results
 ```
 
+**Cross-Platform CI Testing:**
+
+The CI pipeline runs tests on multiple operating systems to ensure compatibility:
+
+- **Ubuntu Latest** - Primary Linux environment
+- **Windows Latest** - Windows compatibility
+- **macOS Latest** - macOS compatibility
+
+All tests must pass on all three platforms before merge. OS-specific artifacts (test results, screenshots, videos) are uploaded separately for each platform.
+
 ---
 
 ### 💡 Tips and Tricks

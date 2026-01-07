@@ -409,11 +409,15 @@ jobs:
           echo "🎉 Pre-commit hook tests passed!"
 
   test:
-    name: Test
-    runs-on: ubuntu-latest
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
       pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout code
@@ -432,6 +436,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run tests
+        id: test
         run: npm test
         continue-on-error: true # External test site may be unreachable
         env:
@@ -446,7 +451,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: test-results
+          name: test-results-${{ matrix.os }}
           path: |
             test-results/
             cucumber-report.html
@@ -456,7 +461,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v6
         with:
-          name: screenshots
+          name: screenshots-${{ matrix.os }}
           path: test-results/**/*.png
           retention-days: 30
 
@@ -464,7 +469,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v6
         with:
-          name: videos
+          name: videos-${{ matrix.os }}
           path: test-results/**/*.webm
           retention-days: 30
 
@@ -481,39 +486,79 @@ jobs:
           script: |
             const fs = require('fs');
             const commentPath = 'test-results/pr-comment.md';
+            const os = '${{ matrix.os }}';
+            const testOutcome = '${{ steps.test.outcome }}';
 
             if (!fs.existsSync(commentPath)) {
               console.log('No PR comment file found, skipping...');
               return;
             }
 
-            const comment = fs.readFileSync(commentPath, 'utf8')
+            let comment = fs.readFileSync(commentPath, 'utf8')
               .replace(/\$\{GITHUB_REPOSITORY\}/g, context.repo.owner + '/' + context.repo.repo)
               .replace(/\$\{GITHUB_RUN_ID\}/g, context.runId);
 
-            // Find existing comment
+            // Remove old "Test Results" header lines
+            comment = comment.replace(/^##?\s*[✅❌]?\s*Test Results.*$/m, '').trim();
+
+            // Determine test status
+            const isPassed = testOutcome === 'success';
+            const statusEmoji = isPassed ? '✅' : '❌';
+            const statusText = isPassed ? 'PASSED' : 'FAILED';
+
+            // Add OS identifier to comment header
+            let osEmoji = '🍎';
+            if (os.includes('ubuntu')) {
+              osEmoji = '🐧';
+            } else if (os.includes('windows')) {
+              osEmoji = '🪟';
+            }
+            comment = `## ${osEmoji} Test Results (${os}) - ${statusText} ${statusEmoji}\n\n` + comment;
+
+            // Add unique marker for this OS
+            comment += `\n\n<!-- test-results-${os} -->`;
+
+            // Find existing comments
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
 
+            // Clean up old comment without OS marker (only once, by ubuntu)
+            if (os === 'ubuntu-latest') {
+              const oldComment = comments.find(comment =>
+                comment.user.login === 'github-actions[bot]' &&
+                comment.body.includes('Test Results') &&
+                !comment.body.includes('<!-- test-results-')
+              );
+              if (oldComment) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: oldComment.id
+                });
+                console.log('Deleted old pre-multi-OS comment');
+              }
+            }
+
+            // Find existing comment for this specific OS
             const botComment = comments.find(comment =>
               comment.user.login === 'github-actions[bot]' &&
-              comment.body.includes('Test Results')
+              comment.body.includes(`<!-- test-results-${os} -->`)
             );
 
             if (botComment) {
-              // Update existing comment
+              // Update existing comment for this OS
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: botComment.id,
                 body: comment
               });
-              console.log('Updated existing PR comment');
+              console.log(`Updated existing PR comment for ${os}`);
             } else {
-              // Create new comment
+              // Create new comment for this OS
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
