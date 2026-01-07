@@ -436,6 +436,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run tests
+        id: test
         run: npm test
         continue-on-error: true # External test site may be unreachable
         env:
@@ -486,6 +487,7 @@ jobs:
             const fs = require('fs');
             const commentPath = 'test-results/pr-comment.md';
             const os = '${{ matrix.os }}';
+            const testOutcome = '${{ steps.test.outcome }}';
 
             if (!fs.existsSync(commentPath)) {
               console.log('No PR comment file found, skipping...');
@@ -496,9 +498,14 @@ jobs:
               .replace(/\$\{GITHUB_REPOSITORY\}/g, context.repo.owner + '/' + context.repo.repo)
               .replace(/\$\{GITHUB_RUN_ID\}/g, context.runId);
 
+            // Determine test status
+            const isPassed = testOutcome === 'success';
+            const statusEmoji = isPassed ? '✅' : '❌';
+            const statusText = isPassed ? 'PASSED' : 'FAILED';
+
             // Add OS identifier to comment header
             const osEmoji = os.includes('ubuntu') ? '🐧' : os.includes('windows') ? '🪟' : '🍎';
-            comment = `## ${osEmoji} Test Results - ${os}\n\n` + comment;
+            comment = `## ${osEmoji} Test Results (${os}) - ${statusText} ${statusEmoji}\n\n` + comment;
 
             // Add unique marker for this OS
             comment += `\n\n<!-- test-results-${os} -->`;
