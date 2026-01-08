@@ -44,6 +44,50 @@ interface FeatureSummary {
   skipped: number
 }
 
+function processStep(step: CucumberStep, results: TestResults): void {
+  results.totalSteps++
+  results.duration += step.result.duration ?? 0
+
+  if (step.result.status === 'passed') {
+    results.passedSteps++
+  } else if (step.result.status === 'failed') {
+    results.failedSteps++
+  } else if (step.result.status === 'skipped') {
+    results.skippedSteps++
+  }
+}
+
+function determineScenarioStatus(steps: CucumberStep[]): 'passed' | 'failed' | 'skipped' {
+  const hasFailed = steps.some(step => step.result.status === 'failed')
+  if (hasFailed) {
+    return 'failed'
+  }
+
+  const hasSkipped = steps.some(step => step.result.status === 'skipped')
+  if (hasSkipped) {
+    return 'skipped'
+  }
+
+  return 'passed'
+}
+
+function updateScenarioCounts(
+  status: 'passed' | 'failed' | 'skipped',
+  featureSummary: FeatureSummary,
+  results: TestResults,
+): void {
+  if (status === 'passed') {
+    featureSummary.passed++
+    results.passedScenarios++
+  } else if (status === 'failed') {
+    featureSummary.failed++
+    results.failedScenarios++
+  } else {
+    featureSummary.skipped++
+    results.skippedScenarios++
+  }
+}
+
 async function parseTestResults(): Promise<TestResults> {
   const reportPath = 'test-results/cucumber-report.json'
 
@@ -84,34 +128,12 @@ async function parseTestResults(): Promise<TestResults> {
       featureSummary.scenarios++
       results.totalScenarios++
 
-      let scenarioStatus = 'passed'
       for (const step of scenario.steps) {
-        results.totalSteps++
-        results.duration += step.result.duration ?? 0
-
-        if (step.result.status === 'passed') {
-          results.passedSteps++
-        } else if (step.result.status === 'failed') {
-          results.failedSteps++
-          scenarioStatus = 'failed'
-        } else if (step.result.status === 'skipped') {
-          results.skippedSteps++
-          if (scenarioStatus !== 'failed') {
-            scenarioStatus = 'skipped'
-          }
-        }
+        processStep(step, results)
       }
 
-      if (scenarioStatus === 'passed') {
-        featureSummary.passed++
-        results.passedScenarios++
-      } else if (scenarioStatus === 'failed') {
-        featureSummary.failed++
-        results.failedScenarios++
-      } else {
-        featureSummary.skipped++
-        results.skippedScenarios++
-      }
+      const scenarioStatus = determineScenarioStatus(scenario.steps)
+      updateScenarioCounts(scenarioStatus, featureSummary, results)
     }
 
     if (featureSummary.scenarios > 0) {

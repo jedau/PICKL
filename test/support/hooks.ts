@@ -1,11 +1,16 @@
 import { After, AfterAll, Before, BeforeAll, Status, setDefaultTimeout } from '@cucumber/cucumber'
-import { Browser, chromium, firefox, webkit } from '@playwright/test'
+import { Browser, Page, chromium, firefox, webkit } from '@playwright/test'
 import { existsSync } from 'fs'
 import { mkdir, readFile } from 'fs/promises'
 import { ICustomWorld } from './world.js'
 
 // Set timeout for all hooks and steps
 setDefaultTimeout(60000)
+
+interface PickleInfo {
+  name: string
+  id: string
+}
 
 let browser: Browser
 
@@ -66,48 +71,65 @@ Before(async function (this: ICustomWorld, { pickle }): Promise<void> {
   this.context = context
 })
 
+async function saveScreenshot(page: Page, pickle: PickleInfo, world: ICustomWorld): Promise<void> {
+  const screenshotPath = `test-results/screenshots/${pickle.name.replace(/[^a-z0-9]/gi, '_')}-${pickle.id}.png`
+  const screenshot = await page.screenshot({
+    path: screenshotPath,
+    type: 'png',
+    fullPage: true,
+  })
+  world.attach(screenshot, 'image/png')
+}
+
+async function saveVideo(page: Page, world: ICustomWorld): Promise<{ pageClosedEarly: boolean }> {
+  const video = page.video()
+  if (!video || process.env.HEADLESS === 'false') {
+    return { pageClosedEarly: false }
+  }
+
+  try {
+    await page.close()
+    const videoPath = await video.path()
+    const videoBuffer = await readFile(videoPath)
+    world.attach(videoBuffer, 'video/webm')
+    return { pageClosedEarly: true }
+  } catch (error) {
+    console.warn('Failed to attach video:', error)
+    return { pageClosedEarly: false }
+  }
+}
+
+async function handleFailure(
+  page: Page | undefined,
+  pickle: PickleInfo,
+  tracePath: string,
+  world: ICustomWorld,
+): Promise<boolean> {
+  let pageClosedEarly = false
+
+  if (page) {
+    await saveScreenshot(page, pickle, world)
+    const videoResult = await saveVideo(page, world)
+    pageClosedEarly = videoResult.pageClosedEarly
+  }
+
+  const traceLink = `<a href="https://trace.playwright.dev/">Open trace file: ${tracePath}</a>`
+  world.attach(traceLink, 'text/html')
+
+  return pageClosedEarly
+}
+
 After(async function (this: ICustomWorld, { pickle, result }) {
   const { context, page } = this
 
-  // Save trace file
   const tracePath = `test-results/traces/${pickle.id}.zip`
   await context?.tracing.stop({ path: tracePath })
 
-  // Attach artifacts on failure
   let pageClosedEarly = false
   if (result?.status === Status.FAILED) {
-    // Screenshot with descriptive name
-    if (page) {
-      const screenshotPath = `test-results/screenshots/${pickle.name.replace(/[^a-z0-9]/gi, '_')}-${pickle.id}.png`
-      const screenshot = await page.screenshot({
-        path: screenshotPath,
-        type: 'png',
-        fullPage: true,
-      })
-      this.attach(screenshot, 'image/png')
-    }
-
-    // Video - only in headless mode
-    const video = page?.video()
-    if (video && process.env.HEADLESS !== 'false') {
-      try {
-        // Close the page first to ensure video is saved
-        await page?.close()
-        pageClosedEarly = true
-        const videoPath = await video.path()
-        const videoBuffer = await readFile(videoPath)
-        this.attach(videoBuffer, 'video/webm')
-      } catch (error) {
-        console.warn('Failed to attach video:', error)
-      }
-    }
-
-    // Trace link
-    const traceLink = `<a href="https://trace.playwright.dev/">Open trace file: ${tracePath}</a>`
-    this.attach(traceLink, 'text/html')
+    pageClosedEarly = await handleFailure(page, pickle, tracePath, this)
   }
 
-  // Cleanup
   if (!pageClosedEarly) {
     await page?.close()
   }

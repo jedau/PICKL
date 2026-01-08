@@ -19,11 +19,7 @@ for (let i = 0; i < args.length; i++) {
 }
 
 // CLI tags take precedence over environment variable
-const tagsOption = cliTags
-  ? `--tags "${cliTags}"`
-  : process.env.TAGS
-    ? `--tags "${process.env.TAGS}"`
-    : ''
+const tagsOption = cliTags || process.env.TAGS ? `--tags "${cliTags || process.env.TAGS}"` : ''
 
 // Get existing NODE_OPTIONS or start with tsx/dotenv imports
 const baseNodeOptions = '--import tsx --import dotenv/config'

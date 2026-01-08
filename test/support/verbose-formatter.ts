@@ -75,42 +75,54 @@ class VerboseFormatter extends Formatter {
     }
   }
 
+  private getStatusIcon(status: messages.TestStepResultStatus): string {
+    if (status === messages.TestStepResultStatus.PASSED) {
+      return '✅'
+    }
+    if (status === messages.TestStepResultStatus.FAILED) {
+      return '❌'
+    }
+    if (status === messages.TestStepResultStatus.SKIPPED) {
+      return '⊘'
+    }
+    return '⚠️'
+  }
+
+  private updateStepCounts(status: messages.TestStepResultStatus): void {
+    this.totalSteps++
+    if (status === messages.TestStepResultStatus.PASSED) {
+      this.passedCount++
+    } else if (status === messages.TestStepResultStatus.FAILED) {
+      this.failedCount++
+    } else if (status === messages.TestStepResultStatus.SKIPPED) {
+      this.skippedCount++
+    }
+  }
+
   private logTestStepFinished(testStepFinished: messages.TestStepFinished) {
     const testCase = this.eventDataCollector.getTestCaseAttempt(testStepFinished.testCaseStartedId)
-    if (testCase) {
-      const testStep = testCase.testCase?.testSteps?.find(s => s.id === testStepFinished.testStepId)
-
-      // Only log result if it's a Gherkin step (not a hook)
-      if (testStep?.pickleStepId) {
-        const gherkinStep = testCase.pickle.steps.find(s => s.id === testStep.pickleStepId)
-        if (gherkinStep?.text) {
-          const status = testStepFinished.testStepResult.status
-          const icon =
-            status === messages.TestStepResultStatus.PASSED
-              ? '✅'
-              : status === messages.TestStepResultStatus.FAILED
-                ? '❌'
-                : status === messages.TestStepResultStatus.SKIPPED
-                  ? '⊘'
-                  : '⚠️'
-
-          // Track counts
-          this.totalSteps++
-          if (status === messages.TestStepResultStatus.PASSED) {
-            this.passedCount++
-          } else if (status === messages.TestStepResultStatus.FAILED) {
-            this.failedCount++
-          } else if (status === messages.TestStepResultStatus.SKIPPED) {
-            this.skippedCount++
-          }
-
-          // Clear line and rewrite with final icon
-          // \r returns the cursor to the start of the line, and \x1b[K clears the line.
-          // This enables in-place updates of the step status in the terminal.
-          this.log(`\r\x1b[K  ${icon} ${gherkinStep.text}\n`)
-        }
-      }
+    if (!testCase) {
+      return
     }
+
+    const testStep = testCase.testCase?.testSteps?.find(s => s.id === testStepFinished.testStepId)
+    if (!testStep?.pickleStepId) {
+      return
+    }
+
+    const gherkinStep = testCase.pickle.steps.find(s => s.id === testStep.pickleStepId)
+    if (!gherkinStep?.text) {
+      return
+    }
+
+    const status = testStepFinished.testStepResult.status
+    const icon = this.getStatusIcon(status)
+    this.updateStepCounts(status)
+
+    // Clear line and rewrite with final icon
+    // \r returns the cursor to the start of the line, and \x1b[K clears the line.
+    // This enables in-place updates of the step status in the terminal.
+    this.log(`\r\x1b[K  ${icon} ${gherkinStep.text}\n`)
   }
 
   private logTestRunFinished() {

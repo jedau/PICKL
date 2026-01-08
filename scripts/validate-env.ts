@@ -1,6 +1,5 @@
 #!/usr/bin/env tsx
-import { existsSync } from 'fs'
-import { readFile } from 'fs/promises'
+import { existsSync, readFileSync } from 'fs'
 
 import Debug from 'debug'
 const debug = Debug('framework:validate-env')
@@ -8,7 +7,7 @@ const debug = Debug('framework:validate-env')
 /**
  * Environment variable validation configuration
  */
-interface EnvValidation {
+interface EnvVarConfig {
   name: string
   required: boolean
   pattern?: RegExp
@@ -18,7 +17,7 @@ interface EnvValidation {
 /**
  * Environment variables to validate
  */
-const envVars: EnvValidation[] = [
+const envVars: EnvVarConfig[] = [
   {
     name: 'BASE_URL',
     required: false,
@@ -58,88 +57,86 @@ const dangerousPatterns = [
   { pattern: /AIza[0-9A-Za-z\\-_]{35}/i, message: 'Google API key detected' },
 ]
 
-/**
- * Main validation function
- */
-async function validateEnvironment(): Promise<void> {
-  debug('🔍 Validating environment configuration...\n')
-
-  let hasErrors = false
-  let hasWarnings = false
-
-  // Check if .env file exists
+function checkEnvFileExists(): void {
   if (!existsSync('.env')) {
     debug('ℹ️  .env file not found. Using defaults from .env.example')
     debug('   (This is OK for CI/CD environments)\n')
   }
+}
 
-  // Check that .env is in .gitignore
+function checkGitignore(): { hasError: boolean; hasWarning: boolean } {
   try {
-    const gitIgnore = await readFile('.gitignore', 'utf-8')
+    const gitIgnore = readFileSync('.gitignore', 'utf-8')
     if (!gitIgnore.includes('.env')) {
       console.error('❌ CRITICAL: .env is not in .gitignore!')
       console.error('   Add ".env" to .gitignore immediately to prevent secret leaks\n')
-      hasErrors = true
-    } else {
-      debug('✅ .env is properly gitignored')
+      return { hasError: true, hasWarning: false }
     }
+    debug('✅ .env is properly gitignored')
+    return { hasError: false, hasWarning: false }
   } catch {
     console.warn('⚠️  Could not read .gitignore file')
-    hasWarnings = true
+    return { hasError: false, hasWarning: true }
   }
+}
 
-  // Check that .env.example exists
+function checkEnvExample(): boolean {
   if (!existsSync('.env.example')) {
     console.error('❌ ERROR: .env.example file is missing!')
     console.error('   This file should contain placeholder values for all environment variables\n')
-    hasErrors = true
-  } else {
-    debug('✅ .env.example exists')
+    return true
+  }
+  debug('✅ .env.example exists')
+  return false
+}
+
+function maskValue(value: string): string {
+  return value.length > 20
+    ? `${value.substring(0, 10)}...${value.substring(value.length - 5)}`
+    : value
+}
+
+function validateEnvVar(envVar: EnvVarConfig): boolean {
+  const value = process.env[envVar.name]
+
+  if (envVar.required && !value) {
+    console.error(`❌ ERROR: Required variable ${envVar.name} is not set`)
+    console.error(`   ${envVar.description}`)
+    return true
   }
 
-  debug('')
-
-  // Validate environment variables
-  for (const envVar of envVars) {
-    const value = process.env[envVar.name]
-
-    if (envVar.required && !value) {
-      console.error(`❌ ERROR: Required variable ${envVar.name} is not set`)
-      console.error(`   ${envVar.description}`)
-      hasErrors = true
-      continue
-    }
-
-    if (value && envVar.pattern && !envVar.pattern.test(value)) {
-      console.error(`❌ ERROR: ${envVar.name}="${value}" is invalid`)
-      console.error(`   ${envVar.description}\n`)
-      hasErrors = true
-    } else if (value) {
-      // Mask the value for security
-      const maskedValue =
-        value.length > 20
-          ? `${value.substring(0, 10)}...${value.substring(value.length - 5)}`
-          : value
-      debug(`✅ ${envVar.name}="${maskedValue}"`)
-    }
+  if (value && envVar.pattern && !envVar.pattern.test(value)) {
+    console.error(`❌ ERROR: ${envVar.name}="${value}" is invalid`)
+    console.error(`   ${envVar.description}\n`)
+    return true
   }
 
-  debug('')
+  if (value) {
+    debug(`✅ ${envVar.name}="${maskValue(value)}"`)
+  }
 
-  // Check for dangerous patterns in environment variables
+  return false
+}
+
+function isSystemVariable(key: string): boolean {
+  return (
+    key.startsWith('npm_') ||
+    key.startsWith('NODE_') ||
+    key === 'PATH' ||
+    key === 'PWD' ||
+    key === 'SHELL' ||
+    key === 'HOME' ||
+    key === 'USER'
+  )
+}
+
+function scanForDangerousPatterns(): boolean {
+  let hasErrors = false
+
   debug('🔒 Scanning for potentially sensitive data...\n')
 
   for (const [key, value] of Object.entries(process.env)) {
-    // Skip system environment variables and known safe variables
-    if (
-      key.startsWith('npm_') ||
-      key.startsWith('NODE_') ||
-      key === 'PATH' ||
-      key === 'PWD' ||
-      key === 'SHELL' ||
-      key === 'HOME' ||
-      key === 'USER'
-    ) {
+    if (isSystemVariable(key)) {
       continue
     }
 
@@ -154,6 +151,42 @@ async function validateEnvironment(): Promise<void> {
         hasErrors = true
       }
     }
+  }
+
+  return hasErrors
+}
+
+/**
+ * Main validation function
+ */
+function validateEnvironment(): void {
+  debug('🔍 Validating environment configuration...\n')
+
+  let hasErrors = false
+  let hasWarnings = false
+
+  checkEnvFileExists()
+
+  const gitignoreResult = checkGitignore()
+  hasErrors = gitignoreResult.hasError
+  hasWarnings = gitignoreResult.hasWarning
+
+  if (checkEnvExample()) {
+    hasErrors = true
+  }
+
+  debug('')
+
+  for (const envVar of envVars) {
+    if (validateEnvVar(envVar)) {
+      hasErrors = true
+    }
+  }
+
+  debug('')
+
+  if (scanForDangerousPatterns()) {
+    hasErrors = true
   }
 
   // Summary
@@ -178,7 +211,9 @@ async function validateEnvironment(): Promise<void> {
 }
 
 // Run validation
-validateEnvironment().catch(error => {
+try {
+  validateEnvironment()
+} catch (error) {
   console.error('💥 Unexpected error during validation:', error)
   process.exit(1)
-})
+}
