@@ -238,10 +238,38 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run tests with coverage
+        id: coverage-test
         run: npm run test:coverage
         continue-on-error: true
         env:
           BASE_URL: https://the-internet.herokuapp.com
+
+      - name: Verify only expected test failed
+        run: |
+          # Check the cucumber report to verify only the @fail test failed
+          if [ ! -f test-results/cucumber-report.json ]; then
+            echo "❌ Error: cucumber-report.json not found"
+            exit 1
+          fi
+
+          # Parse the report to count failures (requires jq)
+          TOTAL_SCENARIOS=$(jq '[.[] | .elements[]] | length' test-results/cucumber-report.json)
+          FAILED_SCENARIOS=$(jq '[.[] | .elements[] | select(.steps[]?.result.status == "failed")] | length' test-results/cucumber-report.json)
+          FAILED_NAMES=$(jq -r '[.[] | .elements[] | select(.steps[]?.result.status == "failed") | .name] | join(", ")' test-results/cucumber-report.json)
+
+          echo "📊 Test Results:"
+          echo "  Total scenarios: $TOTAL_SCENARIOS"
+          echo "  Failed scenarios: $FAILED_SCENARIOS"
+
+          if [ "$FAILED_SCENARIOS" -eq 0 ]; then
+            echo "✅ All tests passed (no failures)"
+          elif [ "$FAILED_SCENARIOS" -eq 1 ] && echo "$FAILED_NAMES" | grep -q "Intentional failing test for demonstration"; then
+            echo "✅ Only the expected @fail test failed: $FAILED_NAMES"
+          else
+            echo "❌ Unexpected test failures detected: $FAILED_NAMES"
+            echo "Expected only 'Intentional failing test for demonstration' to fail"
+            exit 1
+          fi
 
       - name: Check coverage thresholds
         run: npm run coverage:check
