@@ -1391,7 +1391,7 @@ Quick debugging options:
 - [Getting Started](GETTING-STARTED.md) - Detailed setup instructions
 - [Architecture Documentation](ARCHITECTURE.md) - Understand the framework structure and patterns
 - [Training Exercises](TRAINING-EXERCISES.md) - Practice exercises for learning
-- [Learning Path](LEARNING-PATH.md) - Structured 4-week training curriculum
+- [Learning Path](LEARNING-PATH.md) - Structured 3-week intensive training program
 - [API Reference](API-REFERENCE.md) - Detailed API documentation
 - [Writing Tests Guide](WRITING-TESTS.md) - How to write feature files and steps
 - [Running Tests Guide](RUNNING-TESTS.md) - How to execute tests

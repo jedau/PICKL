@@ -10,9 +10,7 @@
     "**/*.config.ts",
     "**/node_modules/**",
     "coverage/**",
-    "test-results/**",
-    "allure-results/**",
-    "allure-report/**"
+    "test-results/**"
   ],
   "reporter": ["html", "text", "json-summary", "lcov"],
   "lines": 80,

@@ -85,7 +85,7 @@ So you want to start doing automation? Well, you came to the right place! Follow
 
 Now that you have PICKL set up, here are your next steps:
 
-**For Learners**: Follow the structured [Learning Path](LEARNING-PATH.md) - a 4-week curriculum to master BDD automation.
+**For Learners**: Follow the structured [Learning Path](LEARNING-PATH.md) - a 3-week intensive program to master BDD automation.
 
 **For Contributors**: Read the [Contributing Guide](CONTRIBUTING.md) to understand coding standards and workflow.
 
@@ -118,7 +118,7 @@ You didn't find the answer you were looking for? Check the [Troubleshooting Guid
 - [Running Tests](RUNNING-TESTS.md) - Complete guide to executing tests with various options
 - [Writing Tests](WRITING-TESTS.md) - Learn Gherkin syntax and create feature files
 - [Glossary](GLOSSARY.md) - BDD, Playwright, and testing terminology reference
-- [Learning Path](LEARNING-PATH.md) - Follow a structured 4-week training curriculum
+- [Learning Path](LEARNING-PATH.md) - Follow a structured 3-week intensive training program
 - [Contributing Guide](CONTRIBUTING.md) - Guidelines for contributing to PICKL
 - [Troubleshooting](TROUBLESHOOTING.md) - Solutions for common setup and execution issues
 - [Common Mistakes](COMMON-MISTAKES.md) - Avoid these 28 common pitfalls

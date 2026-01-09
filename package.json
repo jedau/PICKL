@@ -15,7 +15,7 @@
     "test:smoke": "cross-env TAGS=@smoke npm test",
     "test:regression": "cross-env TAGS=@regression npm test",
     "test:clean": "npm run clean && npm run test",
-    "test:coverage": "c8 npm test",
+    "test:coverage": "cross-env TAGS=\"\" c8 npm test",
     "coverage:check": "c8 check-coverage",
     "report": "node scripts/generate-report.ts",
     "report:pr": "tsx scripts/generate-pr-comment.ts",

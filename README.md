@@ -59,7 +59,7 @@ PICKL is a modern BDD test automation boilerplate that combines Playwright's pow
 
 ### 📖 Learning & Training
 
-- [Learning Path](docs/LEARNING-PATH.md) - Structured 4-week curriculum
+- [Learning Path](docs/LEARNING-PATH.md) - Structured 3-week intensive curriculum
 - [Training Exercises](docs/TRAINING-EXERCISES.md) - Hands-on practice exercises
 - [Common Mistakes](docs/COMMON-MISTAKES.md) - Avoid these 28 common pitfalls
 

@@ -1,136 +1,286 @@
 # PICKL Learning Path 🥒
 
-A structured 4-week learning path to master BDD test automation with Playwright and Cucumber.
+A structured 3-week intensive program to master BDD test automation with Playwright and Cucumber.
 
 ## 📋 Overview
 
-This learning path is designed for both beginners and those with some testing experience. Each week builds upon the previous, introducing new concepts and reinforcing learned skills.
+This learning path is an intensive, hands-on program where you'll learn the PICKL framework while automating tests for a website of your choice. You'll receive daily support, feedback sessions, and culminate with a demo of your automated test suite.
 
-### Time Commitment
+### Program Structure
 
-- **Total Duration**: 4 weeks
-- **Weekly Hours**: 10-15 hours
-- **Daily Practice**: 2-3 hours recommended
+- **Total Duration**: 3 weeks (14 days) + Week 0 (pre-work)
+- **Format**: Self-paced learning with daily online check-ins
+- **Commitment**: Full-time intensive (6-8 hours daily)
+- **Final Deliverable**: Automated test suite demo
 
 ### Prerequisites
 
 - Basic understanding of JavaScript/TypeScript
 - Familiarity with web applications
-- Development environment set up (see [Getting Started](GETTING-STARTED.md))
+- Ability to commit to full-time learning for 3 weeks
+- A website/application you want to automate (discussed in Week 0)
 
 ---
 
-## 🗓️ Week 1: Foundation
+## 🎬 Week 0: Introduction & Preparation
 
 ### Goal
 
-Understand the framework basics and write your first automated test.
+Prepare for the intensive program and set up your learning environment.
 
-### Topics
+### Schedule
 
-- Project structure and architecture
-- Page Object Model fundamentals
-- Gherkin syntax and feature files
-- Running and viewing test results
+#### Introduction Session (1 hour, Online)
 
-### Learning Objectives
+**Topics:**
 
-By the end of Week 1, you should be able to:
+- Program overview and expectations
+- Learning objectives and outcomes
+- Support structure (daily stand-ups, review sessions)
+- Final demo and retrospective format
+- Q&A
 
-- ✅ Navigate the PICKL project structure
-- ✅ Run existing tests with different configurations
-- ✅ Understand the Page Object Model pattern
-- ✅ Modify existing feature files
-- ✅ Interpret test results and reports
+**Deliverables:**
 
-### Daily Schedule
-
-#### Day 1: Setup and Exploration
-
-**Morning (2 hours)**
-
-- Complete [Getting Started Guide](GETTING-STARTED.md)
-- Install and verify all dependencies
-- Run your first test with `npm test`
-
-**Afternoon (2 hours)**
-
-- Read [Architecture Documentation](ARCHITECTURE.md) - Project Structure section
-- Explore the `pages/`, `test/features/`, and `test/steps/` directories
-- Generate and review an HTML report
-
-**Exercise**: [Exercise 1.1 - Run and Understand Existing Tests](TRAINING-EXERCISES.md#exercise-11-run-and-understand-existing-tests)
+- Choose a website/application to automate (e.g., e-commerce site, SaaS product, public API)
+- Identify key test scenarios for your chosen site
+- Set personal learning goals
 
 ---
 
-#### Day 2: Understanding Page Objects
+#### Pre-Requisites (Self-Paced)
 
-**Morning (2 hours)**
+**Complete before Week 1 begins:**
+
+- ✅ JavaScript/TypeScript fundamentals review
+- ✅ Understanding of async/await
+- ✅ Basic HTML/CSS selector knowledge
+- ✅ Git basics
+- ✅ Development environment setup
+
+**Resources:**
+
+- [Getting Started Guide](GETTING-STARTED.md)
+- TypeScript Handbook (optional refresher)
+- Git basics tutorial (if needed)
+
+---
+
+#### Detailed Walkthrough Session (1 hour, Online)
+
+**Topics:**
+
+- PICKL architecture deep dive
+- How Cucumber connects to Playwright
+- Page Object Model pattern explained
+- Custom World pattern
+- Test execution flow
+- Reporting and debugging tools
+
+**Activities:**
+
+- Live demo of test execution
+- Code walkthrough of existing tests
+- Q&A about framework internals
+
+**Preparation:**
+
+- Read [Architecture Documentation](ARCHITECTURE.md) beforehand
+- Prepare questions about the framework
+
+---
+
+## 🚀 Week 1: Foundation & Core Concepts
+
+### Goal
+
+Learn PICKL fundamentals while setting up your test automation project.
+
+### Support Structure
+
+- **Daily Stand-Up**: 15 minutes, online, every morning
+  - What you learned yesterday
+  - What you're working on today
+  - Any blockers or questions
+
+- **Initial Reviews**: 30-minute optional sessions, book as needed
+  - Code review and feedback
+  - Troubleshooting assistance
+  - Best practices guidance
+
+---
+
+### Day 1: Setup and Exploration + Understanding Page Objects
+
+**Self-Paced Learning**
+
+**Morning: Setup and Exploration (3-4 hours)**
+
+- Complete [Getting Started Guide](GETTING-STARTED.md)
+- Install and verify all dependencies
+- Run existing tests with `npm test`
+- Read [Architecture Documentation](ARCHITECTURE.md) - Project Structure section
+- Explore the `pages/`, `test/features/`, and `test/steps/` directories
+- Generate and review HTML reports
+
+**Exercise**: [Exercise 1.1 - Run and Understand Existing Tests](TRAINING-EXERCISES.md#exercise-11-run-and-understand-existing-tests)
+
+**Afternoon: Understanding Page Objects (3-4 hours)**
 
 - Study `pages/LoginPage.ts` line by line
 - Read [Architecture - Page Object Model](ARCHITECTURE.md#page-object-model)
 - Review [API Reference - LoginPage](API-REFERENCE.md#loginpage)
-
-**Afternoon (2 hours)**
-
 - Study `pages/CheckboxesPage.ts`
-- Compare the two page objects to identify common patterns
-- Document 5 key principles you observe
+- Compare page objects to identify common patterns
 
-**Exercise**: Document what you learned about Page Object Model
+**Your Project:**
+
+- Create project structure for your chosen website
+- Identify 3-5 pages to automate initially
+- Create your first page object file
+
+**Checkpoint**: Can you explain the Page Object Model pattern in your own words?
 
 ---
 
-#### Day 3: Gherkin and Feature Files
+### Day 2: Gherkin + Step Definitions + Hands-On Practice + Automate
 
-**Morning (2 hours)**
+**Self-Paced Learning**
+
+**Morning: Gherkin and Feature Files (2 hours)**
 
 - Read [Writing Tests Guide](WRITING-TESTS.md) - Gherkin Syntax section
-- Study `test/features/login.feature`
-- Learn about Background, Scenario, and tags
-
-**Afternoon (2 hours)**
-
-- Study `test/features/checkboxes.feature`
-- Understand tag usage (@smoke, @positive, @negative)
-- Learn about Scenario Outlines
+- Study `test/features/login.feature` and `test/features/checkboxes.feature`
+- Learn about Background, Scenario, and tags (@smoke, @positive, @negative)
 
 **Exercise**: [Exercise 1.2 - Modify an Existing Scenario](TRAINING-EXERCISES.md#exercise-12-modify-an-existing-scenario)
 
----
-
-#### Day 4: Step Definitions
-
-**Morning (2 hours)**
+**Late Morning: Step Definitions (2 hours)**
 
 - Read [Architecture - Custom World Pattern](ARCHITECTURE.md#custom-world-pattern)
-- Study `test/steps/login.steps.ts`
+- Study `test/steps/login.steps.ts` and `test/steps/checkboxes.steps.ts`
 - Understand the relationship between Gherkin and TypeScript
-
-**Afternoon (2 hours)**
-
-- Study `test/steps/checkboxes.steps.ts`
-- Learn how Page Objects are used in step definitions
-- Understand the `this: ICustomWorld` pattern
+- Learn the `this: ICustomWorld` pattern
 
 **Exercise**: Trace the flow from a Gherkin step to its implementation
 
----
-
-#### Day 5: Hands-On Practice
-
-**Morning (2 hours)**
+**Afternoon: Hands-On Practice (2 hours)**
 
 - [Exercise 1.3 - Create Your First Page Object](TRAINING-EXERCISES.md#exercise-13-create-your-first-page-object)
-- Create `DropdownPage.ts`
-
-**Afternoon (3 hours)**
-
 - [Exercise 1.4 - Write Your First Feature File](TRAINING-EXERCISES.md#exercise-14-write-your-first-feature-file)
 - [Exercise 1.5 - Implement Step Definitions](TRAINING-EXERCISES.md#exercise-15-implement-step-definitions)
-- Run your complete test and generate a report
 
-**Milestone**: You've created your first complete test from scratch!
+**Evening: Automate Your Tests (2-3 hours)**
+
+**Your Project:**
+
+- Write feature files for your chosen website
+- Implement page objects for those features
+- Create step definitions
+- Run your tests and fix any issues
+- Generate reports
+
+**Milestone**: You have working automated tests for your chosen website!
+
+---
+
+### Day 3: Scenario Outlines + Form Handling
+
+**Self-Paced Learning**
+
+**Morning: Scenario Outlines (3 hours)**
+
+- Read about Scenario Outlines in [Writing Tests](WRITING-TESTS.md)
+- Study the Scenario Outline example in `login.feature`
+- Understand Examples tables and data-driven testing
+
+**Exercise**: [Exercise 2.5 - Scenario Outline with Data Tables](TRAINING-EXERCISES.md#exercise-25-scenario-outline-with-data-tables)
+
+**Your Project:**
+
+- Convert at least 2 scenarios to Scenario Outlines
+- Add multiple test data examples
+- Test edge cases with different data sets
+
+**Afternoon: Form Handling (3-4 hours)**
+
+- Research different HTML input types
+- Study Playwright's form interaction methods: `fill()`, `check()`, `selectOption()`, `setInputFiles()`
+- Learn about handling dropdowns, checkboxes, radio buttons, file uploads
+
+**Exercise**: [Exercise 2.1 - Add Form Page with Multiple Input Types](TRAINING-EXERCISES.md#exercise-21-add-form-page-with-multiple-input-types)
+
+**Your Project:**
+
+- Add form interaction tests to your project
+- Handle different input types in your application
+- Test form validation scenarios
+
+**Checkpoint**: Can you handle any form element confidently?
+
+---
+
+### Day 4: Dynamic Content + File Operations
+
+**Self-Paced Learning**
+
+**Morning: Dynamic Content (3-4 hours)**
+
+- Learn about Playwright's auto-waiting mechanism
+- Understand `waitForSelector`, `waitForLoadState`, `waitForResponse`
+- Read about handling AJAX requests and dynamic page updates
+
+**Exercise**: [Exercise 2.2 - Working with Dynamic Content](TRAINING-EXERCISES.md#exercise-22-working-with-dynamic-content)
+
+**Your Project:**
+
+- Identify dynamic elements in your application
+- Add wait strategies for dynamic content
+- Test scenarios with asynchronous operations
+
+**Afternoon: File Operations (3 hours)**
+
+- Research file upload/download in Playwright
+- Learn about `setInputFiles()` and download handling
+- Create test fixtures directory for sample files
+
+**Exercise**: [Exercise 2.3 - File Upload Functionality](TRAINING-EXERCISES.md#exercise-23-file-upload-functionality)
+
+**Your Project (if applicable):**
+
+- Add file upload/download tests
+- Verify uploaded files
+- Handle download assertions
+
+**Checkpoint**: Can you handle asynchronous operations and file interactions?
+
+---
+
+### Day 5: Code Reusability
+
+**Self-Paced Learning (Full Day: 6-8 hours)**
+
+**Morning: Code Reusability Concepts (2 hours)**
+
+- Review DRY (Don't Repeat Yourself) principle
+- Study helper patterns and utility functions
+- Learn about step definition reusability
+
+**Afternoon: Refactoring (4-6 hours)**
+
+- [Exercise 2.4 - Create a Reusable Step Helper](TRAINING-EXERCISES.md#exercise-24-create-a-reusable-step-helper)
+
+**Your Project:**
+
+- Identify duplicated code in your project
+- Create helper functions and utilities
+- Refactor step definitions for reusability
+- Refactor page objects to share common patterns
+- Document before/after comparison
+
+**Run full test suite to verify nothing broke!**
+
+**Week 1 Milestone**: You have a clean, maintainable test suite with your initial scenarios automated!
 
 ---
 
@@ -140,328 +290,177 @@ Before moving to Week 2, ensure you can:
 
 - [ ] Explain the Page Object Model pattern
 - [ ] Write Gherkin scenarios following best practices
-- [ ] Create a basic page object with locators and methods
-- [ ] Implement step definitions that connect Gherkin to code
-- [ ] Run tests with different tags and browsers
-- [ ] Generate and interpret HTML reports
+- [ ] Create page objects with proper locators and methods
+- [ ] Implement step definitions connecting Gherkin to code
+- [ ] Use Scenario Outlines for data-driven tests
+- [ ] Handle forms, dynamic content, and file operations
+- [ ] Write clean, reusable code
+- [ ] Run tests and interpret reports
 
 ---
 
-## 🗓️ Week 2: Intermediate Skills
+## 🎯 Week 2: Advanced Patterns & Integration
 
 ### Goal
 
-Master advanced Gherkin features and write more complex tests.
+Master advanced patterns and prepare for professional-grade test automation.
 
-### Topics
+### Support Structure
 
-- Scenario Outlines and data tables
-- Handling different form elements
-- Working with dynamic content
-- Code reusability and helpers
-- Test data management
-
-### Learning Objectives
-
-By the end of Week 2, you should be able to:
-
-- ✅ Use Scenario Outlines for data-driven tests
-- ✅ Handle various input types (text, numbers, files)
-- ✅ Work with dynamic page content
-- ✅ Create reusable helper functions
-- ✅ Manage test data effectively
-
-### Daily Schedule
-
-#### Day 1: Scenario Outlines
-
-**Morning (2 hours)**
-
-- Read about Scenario Outlines in [Writing Tests](WRITING-TESTS.md)
-- Study the Scenario Outline example in `login.feature`
-- Understand Examples tables
-
-**Afternoon (2 hours)**
-
-- [Exercise 2.5 - Scenario Outline with Data Tables](TRAINING-EXERCISES.md#exercise-25-scenario-outline-with-data-tables)
-- Add multiple examples and run tests
-
-**Practice**: Create 3 different Scenario Outlines
+- **Daily Stand-Up**: 15 minutes, online, every morning
+- **Review Sessions**: Available upon request
 
 ---
 
-#### Day 2: Form Handling
+### Day 6: Custom Wait Utilities + Test Data Management
 
-**Morning (2 hours)**
+**Self-Paced Learning**
 
-- Research different HTML input types
-- Study Playwright's form interaction methods
-- Read about `fill()`, `check()`, `selectOption()`, `setInputFiles()`
+**Morning: Custom Wait Utilities (3-4 hours)**
 
-**Afternoon (3 hours)**
-
-- [Exercise 2.1 - Add Form Page with Multiple Input Types](TRAINING-EXERCISES.md#exercise-21-add-form-page-with-multiple-input-types)
-- Test with edge cases (negative numbers, special characters)
-
----
-
-#### Day 3: Dynamic Content
-
-**Morning (2 hours)**
-
-- Learn about Playwright's auto-waiting mechanism
-- Understand `waitForSelector`, `waitForLoadState`
-- Read about handling dynamic content
-
-**Afternoon (3 hours)**
-
-- [Exercise 2.2 - Working with Dynamic Content](TRAINING-EXERCISES.md#exercise-22-working-with-dynamic-content)
-- Implement assertions for dynamic content changes
-
----
-
-#### Day 4: File Operations
-
-**Morning (2 hours)**
-
-- Research file upload/download in Playwright
-- Create test fixtures directory
-- Learn about `setInputFiles()` and download handling
-
-**Afternoon (2 hours)**
-
-- [Exercise 2.3 - File Upload Functionality](TRAINING-EXERCISES.md#exercise-23-file-upload-functionality)
-
----
-
-#### Day 5: Code Reusability
-
-**Full Day (5 hours)**
-
-- [Exercise 2.4 - Create a Reusable Step Helper](TRAINING-EXERCISES.md#exercise-24-create-a-reusable-step-helper)
-- Refactor ALL step definitions
-- Document before/after comparison
-- Run full test suite to verify nothing broke
-
-**Milestone**: You've significantly reduced code duplication!
-
----
-
-### Week 2 Assessment
-
-Before moving to Week 3, ensure you can:
-
-- [ ] Write data-driven tests using Scenario Outlines
-- [ ] Handle various form input types
-- [ ] Work with dynamic page content
-- [ ] Create and use helper utilities
-- [ ] Manage test data in a centralized way
-- [ ] Refactor code for better maintainability
-
----
-
-## 🗓️ Week 3: Advanced Patterns
-
-### Goal
-
-Implement advanced patterns and integrate with APIs.
-
-### Topics
-
-- Custom wait utilities
-- Base page classes
-- Error handling strategies
-- API integration
-- Test data fixtures
-- Custom World enhancements
-
-### Learning Objectives
-
-By the end of Week 3, you should be able to:
-
-- ✅ Create custom wait utilities for complex scenarios
-- ✅ Implement inheritance with base page classes
-- ✅ Handle errors gracefully with custom error types
-- ✅ Integrate API calls with UI tests
-- ✅ Manage complex test data structures
-- ✅ Extend the Custom World for advanced scenarios
-
-### Daily Schedule
-
-#### Day 1: Custom Wait Utilities
-
-**Morning (2 hours)**
-
-- Read about Playwright's waiting strategies
-- Study async/await patterns in depth
+- Read about Playwright's waiting strategies in depth
+- Study async/await patterns and Promise handling
 - Review timing issues in [Common Mistakes](COMMON-MISTAKES.md)
 
-**Afternoon (3 hours)**
+**Exercise**: [Exercise 3.1 - Custom Helper Utilities](TRAINING-EXERCISES.md#exercise-31-custom-helper-utilities)
 
-- [Exercise 3.1 - Custom Wait Utility](TRAINING-EXERCISES.md#exercise-31-custom-wait-utility)
-- Implement and test wait helpers
+**Your Project:**
+
+- Create custom wait utilities for your application's specific needs
+- Replace hard-coded waits with intelligent waiting strategies
+- Add retry logic for flaky operations
+
+**Afternoon: Test Data Management (3-4 hours)**
+
+- Learn about test data fixtures and factories
+- Study data isolation strategies
+- Understand test data cleanup
+
+**Exercise**: [Exercise 3.2 - Test Data Management System](TRAINING-EXERCISES.md#exercise-32-test-data-management-system)
+
+**Your Project:**
+
+- Create test data fixtures for your application
+- Implement data builders/factories
+- Centralize test data management
+- Add data cleanup strategies
+
+**Checkpoint**: Is your test data organized and maintainable?
 
 ---
 
-#### Day 2: Test Data Management
+### Day 7: Error Handling + Base Page Class
 
-**Full Day (5 hours)**
+**Self-Paced Learning**
 
-- [Exercise 3.2 - Test Data Management System](TRAINING-EXERCISES.md#exercise-32-test-data-management-system)
-- Create comprehensive test data fixtures
-- Refactor tests to use centralized data
-- Document your data management strategy
-
----
-
-#### Day 3: Error Handling
-
-**Morning (2 hours)**
+**Morning: Error Handling (3 hours)**
 
 - Read about TypeScript error handling best practices
-- Study custom error classes in TypeScript
-- Review error scenarios in existing tests
+- Study custom error classes
+- Learn about graceful failure handling
 
-**Afternoon (3 hours)**
+**Exercise**: [Exercise 3.3 - Custom Error Handling](TRAINING-EXERCISES.md#exercise-33-custom-error-handling)
 
-- [Exercise 3.3 - Custom Error Handling](TRAINING-EXERCISES.md#exercise-33-custom-error-handling)
-- Implement custom error classes
-- Add to step definitions and page objects
+**Your Project:**
 
----
+- Implement custom error classes for your project
+- Add meaningful error messages
+- Improve error logging and debugging
 
-#### Day 4: Base Page Class
-
-**Morning (2 hours)**
+**Afternoon: Base Page Class (3-4 hours)**
 
 - Study object-oriented inheritance in TypeScript
-- Learn about abstract classes
-- Read about the DRY principle
+- Learn about abstract classes and interfaces
+- Understand the DRY principle applied to page objects
 
-**Afternoon (3 hours)**
+**Exercise**: [Exercise 3.4 - Base Page Class](TRAINING-EXERCISES.md#exercise-34-base-page-class)
 
-- [Exercise 3.4 - Base Page Class](TRAINING-EXERCISES.md#exercise-34-base-page-class)
+**Your Project:**
+
 - Create BasePage with common methods
-- Refactor existing page objects
+- Refactor all page objects to extend BasePage
+- Eliminate code duplication across pages
+- Add common utilities (navigation, assertions, waits)
+
+**Checkpoint**: Are your page objects following OOP principles?
 
 ---
 
-#### Day 5: API Integration
+### Day 8: API Integration
 
-**Full Day (6 hours)**
+**Self-Paced Learning (Full Day: 6-8 hours)**
+
+**Morning: API Testing Concepts (2 hours)**
 
 - Learn about Playwright's API testing capabilities
 - Study the Custom World extension pattern
+- Understand API + UI integration strategies
+
+**Afternoon: Implementation (4-6 hours)**
+
 - [Exercise 3.5 - API Integration Test](TRAINING-EXERCISES.md#exercise-35-api-integration-test)
-- Implement end-to-end test with API setup/teardown
 
-**Milestone**: You've mastered advanced testing patterns!
+**Your Project (if applicable):**
+
+- Identify API endpoints used by your application
+- Add API test coverage
+- Implement hybrid API + UI tests
+- Use API calls for test setup/teardown
+- Add API response validations
+
+**Alternative (if your site has no accessible API):**
+
+- Focus on advanced UI patterns
+- Add visual regression testing
+- Implement accessibility testing
+- Add performance metrics
+
+**Checkpoint**: Can you integrate multiple testing layers?
 
 ---
 
-### Week 3 Assessment
+### Day 9: Custom Formatter + Parallel Execution
 
-Before moving to Week 4, ensure you can:
+**Self-Paced Learning**
 
-- [ ] Create and use custom wait utilities
-- [ ] Implement base page classes for code reuse
-- [ ] Handle errors with custom error types
-- [ ] Integrate API calls with UI tests
-- [ ] Manage complex test data effectively
-- [ ] Extend the Custom World for specific needs
-
----
-
-## 🗓️ Week 4: Master Level
-
-### Goal
-
-Master framework customization, CI/CD, and advanced debugging.
-
-### Topics
-
-- Custom formatter development
-- Parallel test execution
-- CI/CD integration
-- Docker containerization
-- Performance testing
-- Debugging techniques
-
-### Learning Objectives
-
-By the end of Week 4, you should be able to:
-
-- ✅ Create custom Cucumber formatters
-- ✅ Configure and run tests in parallel
-- ✅ Set up CI/CD pipelines
-- ✅ Dockerize test execution
-- ✅ Add performance metrics to tests
-- ✅ Debug complex test issues efficiently
-
-### Daily Schedule
-
-#### Day 1: Custom Formatter
-
-**Morning (2 hours)**
+**Morning: Custom Formatter (3-4 hours)**
 
 - Read [Architecture - Formatter System](ARCHITECTURE.md#formatter-system)
 - Study `test/support/verbose-formatter.ts` in detail
 - Understand Cucumber event system
 
-**Afternoon (4 hours)**
+**Exercise**: [Exercise 4.1 - Custom Formatter Enhancement](TRAINING-EXERCISES.md#exercise-41-custom-formatter-enhancement)
 
-- [Exercise 4.1 - Custom Formatter Enhancement](TRAINING-EXERCISES.md#exercise-41-custom-formatter-enhancement)
-- Add color-coded output and timing features
+**Your Project:**
 
----
+- Enhance reporting for your specific needs
+- Add custom metrics and logging
+- Improve test output readability
 
-#### Day 2: Parallel Execution
-
-**Morning (3 hours)**
+**Afternoon: Parallel Execution (3 hours)**
 
 - Research Cucumber parallel execution strategies
 - Learn about test isolation principles
 - Understand potential race conditions
 
-**Afternoon (3 hours)**
+**Exercise**: [Exercise 4.2 - Parallel Execution Setup](TRAINING-EXERCISES.md#exercise-42-parallel-execution-setup)
 
-- [Exercise 4.2 - Parallel Execution Setup](TRAINING-EXERCISES.md#exercise-42-parallel-execution-setup)
-- Configure parallel workers
+**Your Project:**
+
+- Configure parallel test execution
 - Fix any test isolation issues
+- Optimize test execution time
+- Measure performance improvements
+
+**Checkpoint**: Are your tests running efficiently in parallel?
 
 ---
 
-#### Day 3: CI/CD Pipeline
+### Day 10: Debugging & Review
 
-**Full Day (6 hours)**
+**Self-Paced Learning (Full Day: 6-8 hours)**
 
-- Learn about GitHub Actions workflow syntax
-- Study CI/CD best practices for test automation
-- [Exercise 4.3 - CI/CD Pipeline Configuration](TRAINING-EXERCISES.md#exercise-43-cicd-pipeline-configuration)
-- Create and test your workflow
-- Review test results in GitHub Actions
-
----
-
-#### Day 4: Docker & Performance
-
-**Morning (3 hours)**
-
-- [Exercise 4.4 - Docker Containerization](TRAINING-EXERCISES.md#exercise-44-docker-containerization)
-- Create Dockerfile and docker-compose.yml
-- Test containerized execution
-
-**Afternoon (3 hours)**
-
-- [Exercise 4.5 - Performance Testing Integration](TRAINING-EXERCISES.md#exercise-45-performance-testing-integration)
-- Add performance metrics
-- Analyze results
-
----
-
-#### Day 5: Debugging & Review
-
-**Morning (2 hours)**
+**Morning: Debugging Techniques (3 hours)**
 
 - Review [Troubleshooting Guide](TROUBLESHOOTING.md)
 - Practice debugging techniques:
@@ -469,243 +468,325 @@ By the end of Week 4, you should be able to:
   - Playwright Inspector
   - Trace viewer
   - Video analysis
+  - Screenshot comparison
 
-**Afternoon (3 hours)**
+**Your Project:**
 
-- Review ALL documentation
-- Fill gaps in your understanding
-- Prepare for final project
+- Add debugging hooks to your tests
+- Implement better logging
+- Add screenshots on failure
+- Configure trace collection
+
+**Afternoon: Comprehensive Review (3-5 hours)**
+
+**Your Project:**
+
+- Run complete test suite and fix all failures
+- Review code quality and refactor as needed
+- Ensure all tests follow best practices
+- Update documentation
+- Add/improve comments
+- Verify reports are comprehensive
+- Test in different browsers (if applicable)
+- Prepare preliminary demo
+
+**Week 2 Milestone**: You have a professional-grade, production-ready test automation suite!
 
 ---
 
-### Week 4 Assessment
+### Week 2 Assessment
 
-Before starting the final project, ensure you can:
+Before moving to Week 3, ensure you have:
 
-- [ ] Create custom formatters for specific needs
-- [ ] Configure parallel test execution
-- [ ] Set up CI/CD pipelines for automated testing
-- [ ] Containerize test execution with Docker
-- [ ] Add performance assertions to tests
-- [ ] Debug complex test failures efficiently
+- [ ] Custom wait utilities implemented
+- [ ] Centralized test data management
+- [ ] Proper error handling throughout
+- [ ] Base page class with common utilities
+- [ ] API integration (if applicable)
+- [ ] Enhanced custom formatter
+- [ ] Parallel execution configured
+- [ ] Comprehensive debugging setup
+- [ ] All tests passing consistently
+- [ ] Clean, documented code
 
 ---
 
-## 🏆 Final Project
+## 🎬 Week 3: Finalization & Presentation
 
-### Duration
+### Goal
 
-3-5 days after completing Week 4
+Polish your test suite, receive feedback, and deliver a professional demo.
 
-### Project Options
+---
 
-Choose ONE of the following projects based on your interests:
+### Day 11: Final Feedback Session
 
-#### Option 1: E-commerce Test Suite
+**Online Session (~30 minutes per learner)**
 
-**Goal**: Create a comprehensive test suite for an e-commerce application
+**Format:**
 
-**Requirements**:
+- Present your test automation suite
+- Code review with instructor
+- Receive feedback and suggestions
+- Identify areas for improvement
+- Discuss demo presentation structure
 
-- Product search and filtering
-- Shopping cart operations
-- Multi-step checkout process
-- User account management
-- Payment flow (mock)
-- At least 20 scenarios
-- 100% Page Object Model coverage
-- CI/CD integration
+**Preparation:**
 
-#### Option 2: API Testing Framework
+- Prepare a brief overview of your project
+- List specific questions or concerns
+- Have your code ready for review
+- Document current test coverage
 
-**Goal**: Build a complete API testing framework
+**Deliverable**: Action items list for Day 12
 
-**Requirements**:
+---
 
-- Authentication tests
-- CRUD operations for multiple resources
-- Schema validation
-- Response time assertions
-- Error handling scenarios
-- Integration with UI tests
-- At least 15 API scenarios
-- Comprehensive reporting
+### Day 12: Finishing Touches
 
-#### Option 3: Multi-Site Testing Framework
+**Self-Paced Work (Full Day)**
 
-**Goal**: Extend PICKL to support multiple test sites
+**Tasks:**
 
-**Requirements**:
+- Apply feedback from Day 11 review
+- Fix any remaining issues
+- Enhance documentation:
+  - README with project overview
+  - Setup instructions
+  - How to run tests
+  - Test coverage summary
+  - Architecture decisions
+- Improve test reporting
+- Add final polish to code
+- Practice demo presentation
+- Prepare demo materials:
+  - Slide deck (optional)
+  - Test execution video
+  - Code highlights
+  - Key learnings document
 
-- Configuration for multiple environments
-- Shared page objects across sites
-- Environment-specific test data
-- Cross-site smoke tests
-- Deployment verification tests
-- At least 25 scenarios total
+**Checkpoint**: Are you ready to demo with confidence?
 
-### Submission Requirements
+---
 
-1. **Code Quality**
-   - Follows PICKL naming conventions
-   - Comprehensive JSDoc comments
-   - No linting errors
-   - Formatted with Prettier
+### Day 13: Demo Day
 
-2. **Documentation**
-   - README explaining your project
+**Online Session (2 hours total)**
+
+**Format** (15-20 minutes per learner):
+
+1. **Introduction** (2 minutes)
+   - Your background
+   - Website/application you chose to automate
+
+2. **Project Overview** (3 minutes)
+   - Test coverage (number of scenarios, features)
+   - Technologies and patterns used
    - Architecture decisions
-   - Setup instructions
-   - Test coverage report
 
-3. **Testing**
-   - All tests passing
-   - HTML report generated
-   - CI/CD pipeline configured
-   - Video evidence of test execution
+3. **Live Demo** (5-7 minutes)
+   - Execute test suite
+   - Show reporting capabilities
+   - Highlight interesting test scenarios
+   - Demonstrate debugging tools
 
-4. **Presentation**
-   - 10-minute demo video
-   - Key learnings document
-   - Challenges faced and solutions
+4. **Code Walkthrough** (3-5 minutes)
+   - Show Page Object Model implementation
+   - Highlight advanced patterns used
+   - Discuss interesting challenges solved
+
+5. **Lessons Learned** (2-3 minutes)
+   - What went well
+   - Challenges faced
+   - Key takeaways
+
+6. **Q&A** (3-5 minutes)
+
+**Requirements:**
+
+- All tests must pass during demo
+- Professional presentation
+- Clear explanations
+- Confident delivery
+
+---
+
+### Day 14: Retrospective
+
+**Online Session (1 hour)**
+
+**Group Discussion:**
+
+**What went well?**
+
+- Successful learning outcomes
+- Helpful resources and exercises
+- Effective support structure
+- Positive experiences
+
+**What could be improved?**
+
+- Curriculum gaps
+- Challenging topics that need more coverage
+- Support structure enhancements
+- Resource improvements
+
+**Action items for future cohorts:**
+
+- Documentation updates
+- Exercise improvements
+- Support structure changes
+- Resource additions
+
+**Personal reflections:**
+
+- Individual growth
+- Confidence gained
+- Areas for continued learning
+- Next steps in test automation journey
+
+**Celebration!** 🎉
+
+- Recognize achievements
+- Share contact information
+- Discuss continued learning opportunities
+- Network with peers
 
 ---
 
 ## 📊 Progress Tracking
 
-### Weekly Checklist
+### Daily Checklist
 
-Use this checklist to track your progress:
+Track your progress each day:
 
 #### Week 1
 
-- [ ] Completed all Day 1-5 exercises
-- [ ] Created dropdown feature from scratch
-- [ ] All tests passing
-- [ ] Completed Week 1 assessment
+- [ ] Day 1: Setup, Exploration, Page Objects completed
+- [ ] Day 2: Gherkin, Steps, Practice, Automation in progress
+- [ ] Day 3: Scenario Outlines, Form Handling completed
+- [ ] Day 4: Dynamic Content, File Operations completed
+- [ ] Day 5: Code Reusability, Refactoring completed
+- [ ] Initial test scenarios automated and passing
 
 #### Week 2
 
-- [ ] Mastered Scenario Outlines
-- [ ] Created multiple page objects
-- [ ] Implemented helper functions
-- [ ] Completed Week 2 assessment
+- [ ] Day 6: Wait Utilities, Test Data Management completed
+- [ ] Day 7: Error Handling, Base Page Class completed
+- [ ] Day 8: API Integration (or advanced patterns) completed
+- [ ] Day 9: Custom Formatter, Parallel Execution completed
+- [ ] Day 10: Debugging tools, Complete review done
+- [ ] Comprehensive test scenarios automated and passing
 
 #### Week 3
 
-- [ ] Created custom utilities
-- [ ] Implemented base page class
-- [ ] Integrated API testing
-- [ ] Completed Week 3 assessment
-
-#### Week 4
-
-- [ ] Enhanced formatter
-- [ ] Configured parallel execution
-- [ ] Set up CI/CD
-- [ ] Dockerized tests
-- [ ] Completed Week 4 assessment
-
-#### Final Project
-
-- [ ] Project completed
-- [ ] Documentation written
-- [ ] Demo video recorded
-- [ ] Code reviewed
+- [ ] Day 11: Final feedback session attended
+- [ ] Day 12: All feedback applied, demo ready
+- [ ] Day 13: Demo delivered successfully
+- [ ] Day 14: Retrospective completed
 
 ---
 
-## 🎓 Certification
+## 💡 Success Tips
 
-Upon successful completion of the learning path and final project:
+### Daily Stand-Up Preparation
 
-1. Submit your final project for review
-2. Schedule a 30-minute code review session
-3. Present your learnings and demonstrate your project
-4. Receive your **PICKL Certified Test Automation Engineer** certificate! 🥒
+- Be ready to share your progress concisely
+- Prepare specific questions in advance
+- Document blockers as they occur
+- Celebrate small wins
 
-### Certification Criteria
+### Maximize Review Sessions
 
-To receive certification, you must demonstrate:
+- Book sessions when truly stuck (don't wait days)
+- Prepare specific code sections for review
+- Have clear questions ready
+- Take notes during the session
+- Apply feedback immediately
 
-- ✅ Mastery of Page Object Model pattern
-- ✅ Ability to write maintainable Gherkin scenarios
-- ✅ Strong TypeScript and async programming skills
-- ✅ Understanding of test automation best practices
-- ✅ Ability to debug and troubleshoot effectively
-- ✅ Clean code and documentation skills
+### Time Management
 
----
+- Start early each day
+- Take regular breaks (Pomodoro technique)
+- Don't get stuck on one problem too long
+- Ask for help when needed
+- Set daily goals
 
-## 💡 Study Tips
+### Project Selection Tips
 
-### For Visual Learners
+- Choose a site you're familiar with
+- Ensure it has diverse test scenarios
+- Verify it's accessible (not blocked by security)
+- Consider mobile responsiveness
+- Pick something you're passionate about
 
-- Draw diagrams of the test execution flow
-- Create visual mind maps of the architecture
-- Watch the tests execute in headed mode
-- Study the HTML reports carefully
+### Demo Preparation
 
-### For Hands-On Learners
-
-- Type out all code examples (don't copy-paste)
-- Experiment with breaking tests to see error messages
-- Try variations of the exercises
-- Build small practice projects
-
-### For Reading/Writing Learners
-
-- Take detailed notes as you read documentation
-- Write summaries of each concept
-- Document your learnings in a blog
-- Explain concepts to others (rubber duck debugging)
-
-### General Tips
-
-- 🕐 Practice daily, even if just 30 minutes
-- 🤝 Join the community and ask questions
-- 🔄 Review previous week's material regularly
-- 🎯 Focus on understanding, not memorizing
-- ✍️ Write tests for real-world scenarios
-- 🐛 Learn from your mistakes
-- 📝 Keep a learning journal
+- Practice your demo multiple times
+- Have a backup plan if live demo fails
+- Prepare video recording as backup
+- Test all equipment beforehand
+- Time yourself
 
 ---
 
-## 📚 Additional Resources
+## 📚 Resources
 
-### Week 1 Resources
+### Essential Reading
 
 - [Getting Started Guide](GETTING-STARTED.md)
 - [Architecture Documentation](ARCHITECTURE.md)
 - [Writing Tests Guide](WRITING-TESTS.md)
-
-### Week 2 Resources
-
 - [Training Exercises](TRAINING-EXERCISES.md)
 - [API Reference](API-REFERENCE.md)
-- [Playwright Documentation](https://playwright.dev/)
-
-### Week 3 Resources
-
 - [Common Mistakes Guide](COMMON-MISTAKES.md)
-- [Contributing Guide](CONTRIBUTING.md)
+- [Troubleshooting Guide](TROUBLESHOOTING.md)
+
+### External Resources
+
+- [Playwright Documentation](https://playwright.dev/)
+- [Cucumber Documentation](https://cucumber.io/docs/cucumber/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 
-### Week 4 Resources
+---
 
-- [Troubleshooting Guide](TROUBLESHOOTING.md)
-- [Cucumber Documentation](https://cucumber.io/docs/cucumber/)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+## 🎯 Learning Outcomes
+
+Upon successful completion, you will be able to:
+
+- ✅ Design and implement test automation using PICKL framework
+- ✅ Apply Page Object Model pattern effectively
+- ✅ Write maintainable Gherkin scenarios
+- ✅ Handle complex test scenarios (forms, dynamic content, APIs)
+- ✅ Implement advanced patterns (base classes, custom utilities)
+- ✅ Configure parallel execution and CI/CD integration
+- ✅ Debug and troubleshoot test failures
+- ✅ Present your work professionally
+- ✅ Continue learning independently
 
 ---
 
-## 🤝 Community Support
+## 🤝 Support Structure
 
-- **Questions?** Create an issue in the repository
-- **Stuck?** Review the [Troubleshooting Guide](TROUBLESHOOTING.md)
-- **Want to contribute?** See [Contributing Guide](CONTRIBUTING.md)
+### Daily Stand-Ups
+
+- **When**: Every weekday morning
+- **Duration**: 15 minutes
+- **Format**: Brief updates from each learner
+
+### Review Sessions
+
+- **When**: Book as needed (recommended: at least 2-3 per week)
+- **Duration**: 30 minutes
+- **Format**: One-on-one code review and guidance
+
+### Communication
+
+- Create GitHub issues for questions
+- Use designated communication channel (Slack/Teams/Discord)
+- Share progress and blockers openly
+- Help fellow learners when possible
 
 ---
 
-**Remember: Learning is a journey, not a race. Take your time and enjoy the process!** 🥒
+**Remember: This is an intensive program. Stay committed, ask questions, and enjoy the journey of mastering test automation with PICKL!** 🥒
