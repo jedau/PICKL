@@ -4,8 +4,6 @@ node_modules
 # Test Results & Reports
 test-results/
 playwright-report/
-allure-results/
-allure-report/
 coverage/
 .nyc_output/
 

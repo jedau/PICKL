@@ -108,8 +108,6 @@ export default [
       '*.js',
       '*.mjs',
       'coverage/**',
-      'allure-results/**',
-      'allure-report/**',
       'test-results/**',
       'playwright-report/**',
       'package-lock.json',
