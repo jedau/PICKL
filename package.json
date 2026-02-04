@@ -1,6 +1,6 @@
 {
   "name": "pickl",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "type": "module",
   "description": "A boilerplate project that integrates Playwright with Cucumber/Gherkin for BDD test automation",
   "scripts": {
