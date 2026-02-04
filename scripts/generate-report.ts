@@ -11,7 +11,7 @@ const options = {
   scenarioTimestamp: true,
   launchReport: false,
   metadata: {
-    'App Version': '0.1.0',
+    'App Version': '0.5.0',
     'Test Environment': 'Local',
     Browser: process.env.BROWSER ?? 'chromium',
     Platform: process.platform,
