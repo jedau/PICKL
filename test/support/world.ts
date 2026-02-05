@@ -1,4 +1,4 @@
-import { World, IWorldOptions } from '@cucumber/cucumber'
+import { IWorldOptions, setWorldConstructor, World } from '@cucumber/cucumber'
 import { BrowserContext, Page } from '@playwright/test'
 
 /**
@@ -10,6 +10,10 @@ export interface ICustomWorld extends World {
   page?: Page
   /** Playwright BrowserContext for managing browser state and cookies */
   context?: BrowserContext
+  /** Get the Playwright Page instance with validation */
+  getPage(): Page
+  /** Get a page object instance with automatic page injection */
+  getPageObject<T>(PageClass: new (page: Page) => T): T
 }
 
 /**
@@ -30,4 +34,50 @@ export class CustomWorld extends World implements ICustomWorld {
   constructor(options: IWorldOptions) {
     super(options)
   }
+
+  /**
+   * Gets the Playwright Page instance with validation.
+   * Throws an error if the page is not initialized.
+   *
+   * @returns The Playwright Page instance
+   * @throws {Error} When the page is not initialized
+   *
+   * @example
+   * ```typescript
+   * When('I wait for {int} milliseconds', async function (ms: number) {
+   *   const page = this.getPage()
+   *   await page.waitForTimeout(ms)
+   * })
+   * ```
+   */
+  getPage(): Page {
+    if (!this.page) {
+      throw new Error('Page is not initialized. Ensure the browser is launched in Before hook.')
+    }
+    return this.page
+  }
+
+  /**
+   * Gets a page object instance with the page automatically retrieved and injected.
+   * This method eliminates the need to pass `this` as a parameter.
+   *
+   * @param PageClass - The page object class constructor
+   * @returns An instance of the page object
+   * @throws {Error} When the page is not initialized
+   *
+   * @example
+   * ```typescript
+   * Given('I am on the login page', async function () {
+   *   const loginPage = this.getPageObject(LoginPage)
+   *   await loginPage.goto()
+   * })
+   * ```
+   */
+  getPageObject<T>(PageClass: new (page: Page) => T): T {
+    const page = this.getPage()
+    return new PageClass(page)
+  }
 }
+
+// Register CustomWorld as the World constructor for Cucumber
+setWorldConstructor(CustomWorld)
