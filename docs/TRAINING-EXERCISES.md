@@ -299,28 +299,7 @@ Given('I am on the dropdown page', async function (this: ICustomWorld) {
 
 ---
 
-### Exercise 2.4: Create a Reusable Step Helper
-
-**Objective**: Reduce code duplication in step definitions.
-
-**Tasks**:
-
-1. Create `test/support/step-helpers.ts`
-2. Implement utility functions:
-   ```typescript
-   export function getPage(world: ICustomWorld): Page
-   export function ensurePageInitialized(world: ICustomWorld): void
-   ```
-3. Refactor ALL existing step definitions to use these helpers
-4. Run tests to ensure nothing broke
-
-**Deliverable**: Refactored step definitions using helper functions.
-
-**Hint**: Look at how many times you check `if (!this.page)`!
-
----
-
-### Exercise 2.5: Scenario Outline with Data Tables
+### Exercise 2.4: Scenario Outline with Data Tables
 
 **Objective**: Master parameterized tests.
 
@@ -350,9 +329,7 @@ Given('I am on the dropdown page', async function (this: ICustomWorld) {
 
 ---
 
-## Week 3: Advanced
-
-### Exercise 3.1: Custom Helper Utilities
+### Exercise 2.5: Custom Helper Utilities
 
 **Objective**: Create reusable wait utilities.
 
@@ -372,7 +349,9 @@ Given('I am on the dropdown page', async function (this: ICustomWorld) {
 
 ---
 
-### Exercise 3.2: Test Data Management System
+## Week 3: Advanced
+
+### Exercise 3.1: Test Data Management System
 
 **Objective**: Centralize test data for reusability.
 
@@ -394,7 +373,7 @@ Given('I am on the dropdown page', async function (this: ICustomWorld) {
 
 ---
 
-### Exercise 3.3: Custom Error Handling
+### Exercise 3.2: Custom Error Handling
 
 **Objective**: Create custom error classes for better debugging.
 
@@ -414,7 +393,7 @@ Given('I am on the dropdown page', async function (this: ICustomWorld) {
 
 ---
 
-### Exercise 3.4: Base Page Class
+### Exercise 3.3: Base Page Class
 
 **Objective**: Create a base class for common page functionality.
 
@@ -441,7 +420,7 @@ Given('I am on the dropdown page', async function (this: ICustomWorld) {
 
 ---
 
-### Exercise 3.5: API Integration Test
+### Exercise 3.4: API Integration Test
 
 **Objective**: Combine UI and API testing.
 
@@ -673,38 +652,7 @@ expect(contentBefore).not.toEqual(contentAfter)
 
 ---
 
-### Exercise 2.4 Solution
-
-<details>
-<summary>Click to reveal</summary>
-
-```typescript
-// test/support/step-helpers.ts
-import { Page } from '@playwright/test'
-import { ICustomWorld } from './world.js'
-
-export function getPage(world: ICustomWorld): Page {
-  if (!world.page) {
-    throw new Error('Page is not initialized. Ensure Before hook has run.')
-  }
-  return world.page
-}
-
-// Usage in step definitions
-import { getPage } from '../support/step-helpers.js'
-
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  const loginPage = new LoginPage(page)
-  await loginPage.goto()
-})
-```
-
-</details>
-
----
-
-### Exercise 3.5 Hints
+### Exercise 3.4 Hints
 
 <details>
 <summary>Click to reveal</summary>
