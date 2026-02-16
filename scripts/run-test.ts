@@ -28,6 +28,24 @@ const nodeOptions = existingNodeOptions
   ? `${baseNodeOptions} ${existingNodeOptions}`
   : baseNodeOptions
 
-const command = `cross-env NODE_OPTIONS="${nodeOptions}" cucumber-js --config cucumber.js --import 'test/support/**/*.ts' --import 'test/steps/**/*.ts' --format ./test/support/verbose-formatter.ts --format json:test-results/cucumber-report.json ${tagsOption} ${featurePath}`
+// const command = `cross-env NODE_OPTIONS="${nodeOptions}" cucumber-js --config cucumber.js --import 'test/support/**/*.ts' --import 'test/steps/**/*.ts' --format ./test/support/verbose-formatter.ts --format json:test-results/cucumber-report.json ${tagsOption} ${featurePath}`
 
-execSync(command, { stdio: 'inherit' })
+const command = `cross-env NODE_OPTIONS="${nodeOptions}" cucumber-js --config cucumber.js --import 'test/support/**/*.ts' --import 'test/steps/**/*.ts' --format ./test/support/verbose-formatter.ts --format json:test-results/cucumber-report.json --format html:test-results/report.html ${tagsOption} ${featurePath}`
+
+try {
+  execSync(command, { stdio: 'inherit' })
+} catch {
+  // Provide helpful context - the actual error was already displayed above via stdio: 'inherit'
+  console.error('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+  console.error('❌ TEST EXECUTION FAILED')
+  console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+  console.error('\n⚠️  Ignore the "Command failed: cross-env..." error above.')
+  console.error('The actual error is displayed BEFORE that message.\n')
+  console.error('Common issues to check:')
+  console.error('  • Feature file syntax errors (indentation, keywords, colons)')
+  console.error('  • Missing step definitions')
+  console.error('  • Browser/Playwright installation issues')
+  console.error('  • Incorrect tags or feature file paths\n')
+
+  process.exit(1)
+}

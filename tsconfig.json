@@ -43,7 +43,9 @@
     "scripts/**/*",
     "types/**/*",
     "*.ts",
-    "eslint.config.js"
+    "eslint.config.js",
+    "constants/contstants.ts",
+    "constants/contstants.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

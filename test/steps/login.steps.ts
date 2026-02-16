@@ -1,86 +1,116 @@
 import { Given, Then, When } from '@cucumber/cucumber'
-import { expect } from '@playwright/test'
-import { LoginPage } from '../../pages/LoginPage.js'
+import { usernamesPasswords } from '../../constants/contstants.js'
+import { LoginPage } from '../../pages/loginPage.js'
 import { ICustomWorld } from '../support/world.js'
 
 Given('I am on the login page', async function (this: ICustomWorld) {
   if (!this.page) {
-    throw new Error('Page is not initialized')
+    throw new Error('Page not initialised')
   }
 
   const loginPage = new LoginPage(this.page)
   await loginPage.goto()
 })
 
-When('I enter username {string}', async function (this: ICustomWorld, username: string) {
-  if (!this.page) {
-    throw new Error('Page is not initialized')
-  }
-
-  const loginPage = new LoginPage(this.page)
-  await loginPage.enterUsername(username)
-})
-
-When('I enter password {string}', async function (this: ICustomWorld, password: string) {
-  if (!this.page) {
-    throw new Error('Page is not initialized')
-  }
-
-  const loginPage = new LoginPage(this.page)
-  await loginPage.enterPassword(password)
-})
-
-When('I click the login button', async function (this: ICustomWorld) {
-  if (!this.page) {
-    throw new Error('Page is not initialized')
-  }
-
-  const loginPage = new LoginPage(this.page)
-  await loginPage.clickLogin()
-})
-
-Then('I should see the secure area page', async function (this: ICustomWorld) {
-  if (!this.page) {
-    throw new Error('Page is not initialized')
-  }
-
-  const loginPage = new LoginPage(this.page)
-  const isSecureArea = await loginPage.isOnSecureArea()
-  expect(isSecureArea).toBeTruthy()
-})
-
-Then(
-  'I should see a success message {string}',
-  async function (this: ICustomWorld, expectedMessage: string) {
+When(
+  'I login to the system',
+  async function (this: ICustomWorld, userNameVar: string, passwordVar: string) {
     if (!this.page) {
-      throw new Error('Page is not initialized')
+      throw new Error('Page not initialised')
     }
 
     const loginPage = new LoginPage(this.page)
-    const flashMessage = await loginPage.getFlashMessage()
-    expect(flashMessage).toContain(expectedMessage)
+
+    const userName = usernamesPasswords[userNameVar as keyof typeof usernamesPasswords]
+    const password = usernamesPasswords[passwordVar as keyof typeof usernamesPasswords]
+    await loginPage.inputUsername(userName)
+    await loginPage.inputPassword(password)
   },
 )
 
-Then(
-  'I should see an error message {string}',
-  async function (this: ICustomWorld, expectedMessage: string) {
-    if (!this.page) {
-      throw new Error('Page is not initialized')
-    }
-
-    const loginPage = new LoginPage(this.page)
-    const flashMessage = await loginPage.getFlashMessage()
-    expect(flashMessage).toContain(expectedMessage)
-  },
-)
-
-Then('I should remain on the login page', async function (this: ICustomWorld) {
+When('I enter username {string}', async function (this: ICustomWorld, userNameVar: string) {
   if (!this.page) {
-    throw new Error('Page is not initialized')
+    throw new Error('Page not initialised')
   }
 
   const loginPage = new LoginPage(this.page)
-  const isLoginPage = await loginPage.isOnLoginPage()
-  expect(isLoginPage).toBeTruthy()
+
+  const userName = usernamesPasswords[userNameVar as keyof typeof usernamesPasswords]
+  await loginPage.inputUsername(userName)
 })
+
+When('I enter password {string}', async function (this: ICustomWorld, passwordVar: string) {
+  if (!this.page) {
+    throw new Error('Page not initialised')
+  }
+
+  const loginPage = new LoginPage(this.page)
+  const password = usernamesPasswords[passwordVar as keyof typeof usernamesPasswords]
+  await loginPage.inputPassword(password)
+})
+
+When('I click on Login button', async function (this: ICustomWorld) {
+  if (!this.page) {
+    throw new Error('Page not initialised')
+  }
+
+  const loginPage = new LoginPage(this.page)
+  await loginPage.clickLogInButton()
+})
+
+Then('I should be able to login successfully', async function (this: ICustomWorld) {
+  if (!this.page) {
+    throw new Error('Page not initialised')
+  }
+
+  const loginPage = new LoginPage(this.page)
+  await loginPage.verifySuccessfulLogin()
+})
+
+Then('I should encounter a mandatory username error', async function (this: ICustomWorld) {
+  if (!this.page) {
+    throw new Error('Page not initialised')
+  }
+
+  const loginPage = new LoginPage(this.page)
+  await loginPage.verifyMandatoryUsername()
+})
+
+Then('I should encounter a mandatory pasword error', async function (this: ICustomWorld) {
+  if (!this.page) {
+    throw new Error('Page not initialised')
+  }
+
+  const loginPage = new LoginPage(this.page)
+  await loginPage.verifyMandatoryPassword()
+})
+
+Then('I should encounter a lockedout user error', async function (this: ICustomWorld) {
+  if (!this.page) {
+    throw new Error('Page not initialised')
+  }
+
+  const loginPage = new LoginPage(this.page)
+  await loginPage.verifyLockedOutUser()
+})
+
+Then('I should be able to verify performance of the users', async function (this: ICustomWorld) {
+  if (!this.page) {
+    throw new Error('Page not initialised')
+  }
+
+  const loginPage = new LoginPage(this.page)
+  await loginPage.verifyLoginPerformancerOfUsers()
+})
+
+Then(
+  'I should be able to verify problem user login of the users',
+  async function (this: ICustomWorld) {
+    if (!this.page) {
+      throw new Error('Page not initialised')
+    }
+
+    const loginPage = new LoginPage(this.page)
+    await loginPage.verifyProblemUser()
+  },
+)

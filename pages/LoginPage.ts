@@ -1,99 +1,111 @@
-import { Locator, Page } from '@playwright/test'
+import { expect, Locator, Page } from '@playwright/test'
+import { perfVar, usernamesPasswords } from '../constants/contstants.js'
 
-/**
- * Page Object Model for the Login page
- * URL: https://the-internet.herokuapp.com/login
- */
 export class LoginPage {
-  readonly page: Page
-  readonly usernameInput: Locator
-  readonly passwordInput: Locator
-  readonly loginButton: Locator
-  readonly flashMessage: Locator
-  readonly pageHeading: Locator
+  private readonly userName: Locator
+  private readonly password: Locator
+  private readonly signInBtn: Locator
 
-  constructor(page: Page) {
+  constructor(public page: Page) {
+    //this.userName = page.locator('[data-test="username"]')
     this.page = page
-    this.usernameInput = page.locator('#username')
-    this.passwordInput = page.locator('#password')
-    this.loginButton = page.locator('button[type="submit"]')
-    this.flashMessage = page.locator('#flash')
-    this.pageHeading = page.locator('h2')
+    this.userName = page.locator('[data-test="username"]')
+    //this.userName = page.getByRole('textbox', { name: 'Username' })
+    this.password = page.locator('[data-test="password"]')
+    this.signInBtn = page.getByRole('button', { name: 'LOGIN' })
   }
 
-  /**
-   * Navigate to the login page
-   */
   async goto() {
-    await this.page.goto('/login')
+    await this.page.goto('/')
   }
 
-  /**
-   * Enter username into the username field
-   * @param username - The username to enter
-   */
-  async enterUsername(username: string) {
-    await this.usernameInput.fill(username)
+  //Compound login method
+  async loginUser(userName: string, password: string) {
+    await this.userName.fill(userName)
+    await this.password.fill(password)
+    await this.signInBtn.click()
   }
 
-  /**
-   * Enter password into the password field
-   * @param password - The password to enter
-   */
-  async enterPassword(password: string) {
-    await this.passwordInput.fill(password)
+  //Enter Username method
+  async inputUsername(userName: string) {
+    await this.userName.fill(userName)
   }
 
-  /**
-   * Click the login button
-   */
-  async clickLogin() {
-    await this.loginButton.click()
+  //Enter Password method
+  async inputPassword(password: string) {
+    await this.password.fill(password)
   }
 
-  /**
-   * Perform complete login action
-   * @param username - The username to login with
-   * @param password - The password to login with
-   */
-  async login(username: string, password: string) {
-    await this.enterUsername(username)
-    await this.enterPassword(password)
-    await this.clickLogin()
+  //Click Login Button method
+  async clickLogInButton() {
+    await this.signInBtn.click()
   }
 
-  /**
-   * Get the flash message text (success or error)
-   * @returns The flash message text without the close button
-   */
-  async getFlashMessage(): Promise<string> {
-    const text = await this.flashMessage.textContent()
-    return text?.replace('×', '').trim() ?? ''
+  //Verify if Login is Successfull method
+  async verifySuccessfulLogin() {
+    await expect(this.page.locator('//*[@id="header_container"]/div[1]/div[2]/div')).toBeVisible()
+    await expect(this.page.locator('//*[@id="header_container"]/div[2]/span')).toBeVisible()
+    await expect(this.page.locator('//*[@id="header_container"]/div[2]/span')).toHaveText(
+      'Products',
+    )
   }
 
-  /**
-   * Get the current page heading text
-   * @returns The page heading text
-   */
-  async getPageHeading(): Promise<string> {
-    return (await this.pageHeading.textContent()) ?? ''
+  //Verify Error for Mandatory Username method
+  async verifyMandatoryUsername() {
+    await expect(this.page.locator('[data-test="error"]')).toBeVisible()
+    await expect(this.page.locator('[data-test="error"]')).toHaveText(
+      'Epic sadface: Username is required',
+    )
   }
 
-  /**
-   * Check if currently on the login page
-   * @returns True if on login page, false otherwise
-   */
-  async isOnLoginPage(): Promise<boolean> {
-    const heading = await this.getPageHeading()
-    return heading.includes('Login Page')
+  //Verify Error for Mandatory Password method
+  async verifyMandatoryPassword() {
+    await expect(this.page.locator('[data-test="error"]')).toBeVisible()
+    await expect(this.page.locator('[data-test="error"]')).toHaveText(
+      'Epic sadface: Password is required',
+    )
   }
 
-  /**
-   * Check if currently on the secure area page
-   * @returns True if on secure area, false otherwise
-   */
-  async isOnSecureArea(): Promise<boolean> {
-    const heading = await this.getPageHeading()
-    return heading.includes('Secure Area')
+  //Verify Error for Locked Out User method
+  async verifyLockedOutUser() {
+    await expect(this.page.locator('[data-test="error"]')).toBeVisible()
+    await expect(this.page.locator('[data-test="error"]')).toHaveText(
+      'Epic sadface: Sorry, this user has been locked out.',
+    )
+  }
+
+  //Verify Login for User with Problem on Inventory Page method
+  //Counts Product and will prove that > 0 hence there is a problem
+  async verifyProblemUser() {
+    const errorProduct = this.page.locator(
+      "//div[@class='inventory_item_description' and @data-test='inventory-item-description']//div[@class='inventory_item_desc' and @data-test='inventory-item-desc' and contains(text(), 'carry.allTheThings()')]",
+    )
+    const errorProductCount = await errorProduct.count()
+    expect(errorProductCount).toBeGreaterThan(0)
+    // eslint-disable-next-line no-console
+    console.log(`\n     Number of Products loadeded in error: ${errorProductCount}`)
+  }
+
+  //To Verify Login Performances for Users method
+  async verifyLoginPerformancerOfUsers() {
+    const usernames = [
+      usernamesPasswords.STANDARD_USER,
+      usernamesPasswords.PROBLEM_USER,
+      usernamesPasswords.PERFORMANCE_GLITCH_USER,
+    ]
+    //for (let index = 0; index < usernames.length; index++) {
+    for (const username of usernames) {
+      await this.page.goto('')
+      await this.inputUsername(username)
+      await this.inputPassword(usernamesPasswords.PASSWORD)
+      const startTime = performance.now()
+      await this.clickLogInButton()
+      await this.verifySuccessfulLogin()
+      const endTime = performance.now()
+      const loadTime = endTime - startTime
+      // eslint-disable-next-line no-console
+      console.log(`\n     Page load time of user: ${username} is ${loadTime}ms`)
+      expect(loadTime).toBeLessThan(perfVar.EXPECTED_LOGIN_PERFORMANCE)
+    }
   }
 }

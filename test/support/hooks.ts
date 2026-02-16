@@ -5,7 +5,7 @@ import { mkdir, readFile } from 'fs/promises'
 import { ICustomWorld } from './world.js'
 
 // Set timeout for all hooks and steps
-setDefaultTimeout(60000)
+setDefaultTimeout(100000)
 
 interface PickleInfo {
   name: string
