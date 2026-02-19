@@ -15,7 +15,7 @@ export class searchProduct {
     if (!productName.trim()) {
       throw new Error('searchProd called with empty productName')
     }
-    await this.searchbar.fill('') // clear existing value
+    await this.searchbar.fill('')
     await this.searchbar.fill(productName)
 
     // wait for filtering to apply

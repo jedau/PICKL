@@ -118,8 +118,8 @@ export class placeOrder {
    * Click [ + ] button to increase the quantity
    */
   async incrementBtn() {
-    const broccoliProduct = this.page.locator('.product', { hasText: 'Brocolli - 1 Kg' }) // Locate the product container for Broccoli
-    const increaseButton = broccoliProduct.locator('.increment') // Locate the "+" button inside that container
+    const broccoliProduct = this.page.locator('.product', { hasText: 'Brocolli - 1 Kg' })
+    const increaseButton = broccoliProduct.locator('.increment')
     await increaseButton.click()
   }
 
@@ -127,8 +127,8 @@ export class placeOrder {
    * Click [ - ] button to increase the quantity
    */
   async decrementBtn() {
-    const broccoliProduct = this.page.locator('.product', { hasText: 'Brocolli - 1 Kg' }) // Locate the product container for Broccoli
-    const decreaseButton = broccoliProduct.locator('.decrement') // Locate the "+" button inside that container
+    const broccoliProduct = this.page.locator('.product', { hasText: 'Brocolli - 1 Kg' })
+    const decreaseButton = broccoliProduct.locator('.decrement')
     await decreaseButton.click()
   }
 }

@@ -9,8 +9,8 @@ When('I click [ + ] button', async function (this: ICustomWorld) {
     throw new Error('Page is not initialized')
   }
 
-  const productPage = new productList(this.page) // Initialize productList
-  await productPage.incrementBtn() // Call the method to click the + button
+  const productPage = new productList(this.page)
+  await productPage.incrementBtn()
 })
 
 // ----> Scenario: Clicking [ - ] button to decrease the quantity of the product <---- //
@@ -20,8 +20,8 @@ Then('I click [ - ] button', async function (this: ICustomWorld) {
     throw new Error('Page is not initialized')
   }
 
-  const productPage = new productList(this.page) // Initialize productList
-  await productPage.decrementBtn() // Call the method to click the - button
+  const productPage = new productList(this.page)
+  await productPage.decrementBtn()
 })
 
 // ----> Scenario: Removing a product in the cart modal <---- //

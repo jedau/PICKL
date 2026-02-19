@@ -147,6 +147,6 @@ Then('I should see the order success message', async function () {
     throw new Error('Page is not initialized')
   }
 
-  const placeOrderPage = new placeOrder(this.page as Page) // cast to Page
+  const placeOrderPage = new placeOrder(this.page as Page)
   await placeOrderPage.verifyOrderSuccessMessage()
 })
