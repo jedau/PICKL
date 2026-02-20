@@ -20,6 +20,8 @@ Thank you for your interest in contributing to PICKL! This guide will help you s
 
 If you don't have write access to the repository, follow the fork workflow:
 
+> **📖 Planning to customize PICKL for your own use?** See the [Forking Guide](FORKING.md) for detailed instructions on configuring CI, keeping your fork updated, and more.
+
 #### 1. Fork the Repository
 
 1. Go to https://github.com/jedau/PICKL

@@ -1,4 +1,4 @@
-import eslint from '@eslint/js'
+import js from '@eslint/js'
 import prettierConfig from 'eslint-config-prettier'
 import tseslint from 'typescript-eslint'
 
@@ -8,7 +8,7 @@ const TS_IGNORES = ['*.config.ts', 'scripts/generate-report.ts', 'types/*.d.ts']
 
 export default [
   // Base ESLint recommended rules
-  eslint.configs.recommended,
+  js.configs.recommended,
 
   // TypeScript ESLint recommended rules
   ...tseslint.configs.recommended,

@@ -162,14 +162,11 @@ function scanForDangerousPatterns(): boolean {
 function validateEnvironment(): void {
   debug('🔍 Validating environment configuration...\n')
 
-  let hasErrors = false
-  let hasWarnings = false
-
   checkEnvFileExists()
 
   const { hasError, hasWarning } = checkGitignore()
-  hasErrors = hasError
-  hasWarnings = hasWarning
+  let hasErrors = hasError
+  const hasWarnings = hasWarning
 
   if (checkEnvExample()) {
     hasErrors = true

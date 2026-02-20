@@ -36,6 +36,7 @@ PICKL is a modern BDD test automation boilerplate that combines Playwright's pow
 - **TypeScript + ESM** - Modern JavaScript with full type safety
 - **Environment Configuration** - Flexible `.env` file for local customization
 - **Unified Test Runner** - Single `npm test` command with CLI flags support
+- **Fork-Friendly** - Comprehensive [forking guide](docs/FORKING.md) for customization and CI configuration
 
 ### 🎯 Quality Assurance
 

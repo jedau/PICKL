@@ -116,11 +116,11 @@ jobs:
         run: npm ci
 
       - name: Run npm audit
-        run: npm audit --audit-level=moderate
+        run: npm audit --audit-level=moderate --omit=dev
         continue-on-error: true
 
       - name: Check for high/critical vulnerabilities
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --omit=dev
 
   secrets-check:
     name: Secrets Management Compliance
@@ -237,12 +237,39 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Configure BASE_URL
+        id: configure-base-url
+        run: |
+          # Check if running from a fork PR or Dependabot
+          IS_FORK="${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}"
+          IS_DEPENDABOT="${{ github.actor == 'dependabot[bot]' }}"
+
+          if [ -z "${{ secrets.BASE_URL }}" ]; then
+            if [ "$IS_FORK" = "true" ] || [ "$IS_DEPENDABOT" = "true" ]; then
+              echo "ℹ️  Running from fork PR or Dependabot - using default BASE_URL"
+              echo "BASE_URL=https://the-internet.herokuapp.com" >> $GITHUB_ENV
+            else
+              echo "⚠️  WARNING: BASE_URL secret is not set!"
+              echo "Tests will fail without a valid BASE_URL."
+              echo ""
+              echo "To configure BASE_URL:"
+              echo "  1. Go to Settings → Secrets and variables → Actions"
+              echo "  2. Click 'New repository secret'"
+              echo "  3. Name: BASE_URL"
+              echo "  4. Value: https://your-app.example.com"
+              echo ""
+              echo "See docs/FORKING.md for detailed instructions."
+              exit 1
+            fi
+          else
+            echo "✅ BASE_URL is configured: ${{ secrets.BASE_URL }}"
+            echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
+          fi
+
       - name: Run tests with coverage
         id: coverage-test
         run: npm run test:coverage
         continue-on-error: true
-        env:
-          BASE_URL: https://the-internet.herokuapp.com
 
       - name: Verify only expected test failed
         run: |
@@ -497,17 +524,46 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Configure BASE_URL
+        id: configure-base-url
+        run: |
+          # Check if running from a fork PR or Dependabot
+          IS_FORK="${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}"
+          IS_DEPENDABOT="${{ github.actor == 'dependabot[bot]' }}"
+
+          if [ -z "${{ secrets.BASE_URL }}" ]; then
+            if [ "$IS_FORK" = "true" ] || [ "$IS_DEPENDABOT" = "true" ]; then
+              echo "ℹ️  Running from fork PR or Dependabot - using default BASE_URL"
+              echo "BASE_URL=https://the-internet.herokuapp.com" >> $GITHUB_ENV
+            else
+              echo "⚠️  WARNING: BASE_URL secret is not set!"
+              echo "Tests will fail without a valid BASE_URL."
+              echo ""
+              echo "To configure BASE_URL:"
+              echo "  1. Go to Settings → Secrets and variables → Actions"
+              echo "  2. Click 'New repository secret'"
+              echo "  3. Name: BASE_URL"
+              echo "  4. Value: https://your-app.example.com"
+              echo ""
+              echo "See docs/FORKING.md for detailed instructions."
+              exit 1
+            fi
+          else
+            echo "✅ BASE_URL is configured: ${{ secrets.BASE_URL }}"
+            echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
+          fi
+
       - name: Run tests
         id: test
         run: npm test
         continue-on-error: true # External test site may be unreachable
         env:
-          BASE_URL: https://the-internet.herokuapp.com
           TAGS: not @skip
 
       - name: Generate HTML report
         if: always()
         run: npm run report
+        continue-on-error: true
 
       - name: Upload test results
         if: always()

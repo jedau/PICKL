@@ -69,7 +69,10 @@ class VerboseFormatter extends Formatter {
       if (testStep?.pickleStepId) {
         const gherkinStep = testCase.pickle.steps.find(s => s.id === testStep.pickleStepId)
         if (gherkinStep?.text) {
-          this.log(`  ⏳ ${gherkinStep.text}`)
+          const keyword = this.getStepKeyword(testCase, gherkinStep)
+          const keywordColor = this.getKeywordColor(keyword)
+          const formattedKeyword = `${keywordColor}${keyword}\x1b[0m`
+          this.log(`  ⏳ ${formattedKeyword}\x1b[90m${gherkinStep.text}\x1b[0m`)
         }
       }
     }
@@ -86,6 +89,105 @@ class VerboseFormatter extends Formatter {
       return '⊘'
     }
     return '⚠️'
+  }
+
+  private getKeywordColor(keyword: string): string {
+    const trimmedKeyword = keyword.trim().toLowerCase()
+
+    // Given = Blue (setup/context)
+    if (trimmedKeyword === 'given') {
+      return '\x1b[1m\x1b[34m'
+    }
+
+    // When = Yellow (action/event)
+    if (trimmedKeyword === 'when') {
+      return '\x1b[1m\x1b[33m'
+    }
+
+    // Then = Green (assertion/outcome)
+    if (trimmedKeyword === 'then') {
+      return '\x1b[1m\x1b[32m'
+    }
+
+    // And = Cyan (continuation)
+    if (trimmedKeyword === 'and') {
+      return '\x1b[1m\x1b[36m'
+    }
+
+    // But = Magenta (exception/contrast)
+    if (trimmedKeyword === 'but') {
+      return '\x1b[1m\x1b[35m'
+    }
+
+    // Default = Bold white
+    return '\x1b[1m'
+  }
+
+  private collectStepsFromContainer(
+    container: messages.Background | messages.Scenario | undefined,
+  ): messages.Step[] {
+    return container?.steps ? [...container.steps] : []
+  }
+
+  private collectStepsFromChild(child: messages.FeatureChild): messages.Step[] {
+    const steps: messages.Step[] = []
+
+    steps.push(...this.collectStepsFromContainer(child.background))
+    steps.push(...this.collectStepsFromContainer(child.scenario))
+
+    if (child.rule?.children) {
+      for (const ruleChild of child.rule.children) {
+        steps.push(...this.collectStepsFromContainer(ruleChild.background))
+        steps.push(...this.collectStepsFromContainer(ruleChild.scenario))
+      }
+    }
+
+    return steps
+  }
+
+  private collectAllSteps(feature: messages.Feature): messages.Step[] {
+    if (!feature.children) {
+      return []
+    }
+
+    const allSteps: messages.Step[] = []
+    for (const child of feature.children) {
+      allSteps.push(...this.collectStepsFromChild(child))
+    }
+
+    return allSteps
+  }
+
+  private findGherkinStep(
+    allSteps: messages.Step[],
+    stepAstNodeId: string,
+  ): messages.Step | undefined {
+    return allSteps.find(s => s.id === stepAstNodeId)
+  }
+
+  private getStepKeyword(
+    testCase: { pickle: messages.Pickle },
+    pickleStep: messages.PickleStep,
+  ): string {
+    const gherkinDocument = this.eventDataCollector.getGherkinDocument(testCase.pickle.uri)
+
+    if (!gherkinDocument?.feature) {
+      return ''
+    }
+
+    const stepAstNodeId = pickleStep.astNodeIds?.[0]
+    if (!stepAstNodeId) {
+      return ''
+    }
+
+    const allSteps = this.collectAllSteps(gherkinDocument.feature)
+    const gherkinStep = this.findGherkinStep(allSteps, stepAstNodeId)
+
+    if (gherkinStep?.keyword) {
+      return `${gherkinStep.keyword.trim()} `
+    }
+
+    return ''
   }
 
   private updateStepCounts(status: messages.TestStepResultStatus): void {
@@ -119,10 +221,14 @@ class VerboseFormatter extends Formatter {
     const icon = this.getStatusIcon(status)
     this.updateStepCounts(status)
 
+    const keyword = this.getStepKeyword(testCase, gherkinStep)
+    const keywordColor = this.getKeywordColor(keyword)
+    const formattedKeyword = `${keywordColor}${keyword}\x1b[0m`
+
     // Clear line and rewrite with final icon
     // \r returns the cursor to the start of the line, and \x1b[K clears the line.
     // This enables in-place updates of the step status in the terminal.
-    this.log(`\r\x1b[K  ${icon} ${gherkinStep.text}\n`)
+    this.log(`\r\x1b[K  ${icon} ${formattedKeyword}${gherkinStep.text}\n`)
   }
 
   private logTestRunFinished() {
