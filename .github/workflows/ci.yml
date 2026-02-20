@@ -563,6 +563,7 @@ jobs:
       - name: Generate HTML report
         if: always()
         run: npm run report
+        continue-on-error: true
 
       - name: Upload test results
         if: always()
