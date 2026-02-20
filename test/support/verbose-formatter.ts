@@ -123,20 +123,36 @@ class VerboseFormatter extends Formatter {
     return '\x1b[1m'
   }
 
-  private collectAllSteps(feature: messages.Feature): messages.Step[] {
-    const allSteps: messages.Step[] = []
+  private collectStepsFromContainer(
+    container: messages.Background | messages.Scenario | undefined,
+  ): messages.Step[] {
+    return container?.steps ? [...container.steps] : []
+  }
 
-    if (!feature.children) {
-      return allSteps
+  private collectStepsFromChild(child: messages.FeatureChild): messages.Step[] {
+    const steps: messages.Step[] = []
+
+    steps.push(...this.collectStepsFromContainer(child.background))
+    steps.push(...this.collectStepsFromContainer(child.scenario))
+
+    if (child.rule?.children) {
+      for (const ruleChild of child.rule.children) {
+        steps.push(...this.collectStepsFromContainer(ruleChild.background))
+        steps.push(...this.collectStepsFromContainer(ruleChild.scenario))
+      }
     }
 
+    return steps
+  }
+
+  private collectAllSteps(feature: messages.Feature): messages.Step[] {
+    if (!feature.children) {
+      return []
+    }
+
+    const allSteps: messages.Step[] = []
     for (const child of feature.children) {
-      if (child.background?.steps) {
-        allSteps.push(...child.background.steps)
-      }
-      if (child.scenario?.steps) {
-        allSteps.push(...child.scenario.steps)
-      }
+      allSteps.push(...this.collectStepsFromChild(child))
     }
 
     return allSteps
