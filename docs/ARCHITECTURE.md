@@ -237,16 +237,12 @@ export class CustomWorld extends World implements ICustomWorld {
 ### Using World in Step Definitions
 
 ```typescript
-import { Given, When, Then } from '@cucumber/cucumber'
-import { ICustomWorld } from '../support/world.js'
+import { Given, When, Then } from '../support/step-helpers.js'
 
-Given('I am on the login page', async function (this: ICustomWorld) {
+Given('I am on the login page', async function () {
   // 'this' is the CustomWorld instance for this scenario
-  if (!this.page) {
-    throw new Error('Page is not initialized')
-  }
-
-  const loginPage = new LoginPage(this.page)
+  // Using getPageObject helper (recommended pattern)
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.goto()
 })
 ```
@@ -583,12 +579,10 @@ Scenario: Successful login
   Then I should see the secure area
 
 // 2. Step definition matched
-Given('I am on the login page', async function (this: ICustomWorld) {
-  // 3. Access World
-  const page = this.page!
-
-  // 4. Create Page Object
-  const loginPage = new LoginPage(page)
+Given('I am on the login page', async function () {
+  // 3. Access World via getPageObject helper
+  // 4. Create Page Object (handled by getPageObject)
+  const loginPage = this.getPageObject(LoginPage)
 
   // 5. Execute action
   await loginPage.goto()

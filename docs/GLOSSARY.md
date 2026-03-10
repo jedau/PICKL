@@ -262,9 +262,10 @@ The JavaScript/TypeScript code that implements a Gherkin step. Uses regular expr
 **Example:**
 
 ```typescript
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+import { Given } from '../support/step-helpers.js'
+
+Given('I am on the login page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.goto()
 })
 ```
@@ -272,6 +273,8 @@ Given('I am on the login page', async function (this: ICustomWorld) {
 **Pattern matching:**
 
 ```typescript
+import { When } from '../support/step-helpers.js'
+
 // Cucumber Expression with parameter
 When('I enter username {string}', async function (username: string) {
   await loginPage.enterUsername(username)
@@ -618,9 +621,11 @@ export interface ICustomWorld extends World {
 **Usage:**
 
 ```typescript
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = this.page! // Access page from World
-  const loginPage = new LoginPage(page)
+import { Given } from '../support/step-helpers.js'
+
+Given('I am on the login page', async function () {
+  // Access page from World using helper methods
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.goto()
 })
 ```
@@ -723,18 +728,17 @@ A TypeScript file containing step definition implementations.
 **Structure:**
 
 ```typescript
-import { Given, When, Then } from '@cucumber/cucumber'
-import { ICustomWorld } from '../support/world.js'
+import { Given, When, Then } from '../support/step-helpers.js'
 
-Given('step text', async function (this: ICustomWorld) {
+Given('step text', async function () {
   // Implementation
 })
 
-When('step text', async function (this: ICustomWorld) {
+When('step text', async function () {
   // Implementation
 })
 
-Then('step text', async function (this: ICustomWorld) {
+Then('step text', async function () {
   // Implementation
 })
 ```

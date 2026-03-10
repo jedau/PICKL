@@ -239,6 +239,7 @@ jobs:
 
       - name: Configure BASE_URL
         id: configure-base-url
+        shell: bash
         run: |
           # Check if running from a fork PR or Dependabot
           IS_FORK="${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}"
@@ -256,7 +257,7 @@ jobs:
               echo "  1. Go to Settings → Secrets and variables → Actions"
               echo "  2. Click 'New repository secret'"
               echo "  3. Name: BASE_URL"
-              echo "  4. Value: https://your-app.example.com"
+              echo "  4. Value: <BASE_URL-FROM-YOUR-ENV-FILE>"
               echo ""
               echo "See docs/FORKING.md for detailed instructions."
               exit 1
@@ -526,6 +527,7 @@ jobs:
 
       - name: Configure BASE_URL
         id: configure-base-url
+        shell: bash
         run: |
           # Check if running from a fork PR or Dependabot
           IS_FORK="${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}"
@@ -543,7 +545,7 @@ jobs:
               echo "  1. Go to Settings → Secrets and variables → Actions"
               echo "  2. Click 'New repository secret'"
               echo "  3. Name: BASE_URL"
-              echo "  4. Value: https://your-app.example.com"
+              echo "  4. Value: <BASE_URL-FROM-YOUR-ENV-FILE>"
               echo ""
               echo "See docs/FORKING.md for detailed instructions."
               exit 1

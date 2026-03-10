@@ -24,9 +24,8 @@ A comprehensive guide to common mistakes when using PICKL and how to avoid them.
 **❌ Wrong:**
 
 ```typescript
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+Given('I am on the login page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   loginPage.goto() // Missing await!
 })
 ```
@@ -34,9 +33,10 @@ Given('I am on the login page', async function (this: ICustomWorld) {
 **✅ Correct:**
 
 ```typescript
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+import { Given } from '../support/step-helpers.js'
+
+Given('I am on the login page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.goto() // With await
 })
 ```
@@ -108,9 +108,8 @@ Given('I am on the login page', async function (this: ICustomWorld) {
 **❌ Wrong:**
 
 ```typescript
-When('I fill the login form', async function (this: ICustomWorld) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+When('I fill the login form', async function () {
+  const loginPage = this.getPageObject(LoginPage)
 
   // These run in parallel!
   loginPage.enterUsername('tomsmith')
@@ -122,9 +121,10 @@ When('I fill the login form', async function (this: ICustomWorld) {
 **✅ Correct:**
 
 ```typescript
-When('I fill the login form', async function (this: ICustomWorld) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+import { When } from '../support/step-helpers.js'
+
+When('I fill the login form', async function () {
+  const loginPage = this.getPageObject(LoginPage)
 
   // These run sequentially
   await loginPage.enterUsername('tomsmith')
@@ -182,6 +182,21 @@ Given('I am on the login page', async function () {
 - ✅ Clear error messages if page is not initialized
 - ✅ Consistent pattern across all step definitions
 
+**Note for strict ESLint users**: If you encounter an "unsafe assignment of any value" error with `@typescript-eslint/no-unsafe-assignment`, you have two options:
+
+1. **Use explicit type parameter** (if you prefer stricter linting):
+
+   ```typescript
+   const loginPage = this.getPageObject<LoginPage>(LoginPage)
+   ```
+
+2. **Match PICKL's ESLint config** (if you want PICKL's defaults):
+   - PICKL uses `recommendedTypeChecked` (not `strictTypeChecked`)
+   - This allows implicit type inference without the error
+   - See [eslint.config.js](../eslint.config.js) for PICKL's configuration
+
+See [Troubleshooting - ESLint unsafe assignment error](TROUBLESHOOTING.md#eslint-error-unsafe-assignment-of-any-value) for details on why this works in PICKL without explicit types.
+
 **Alternative: Use `this.getPage()` for direct page access:**
 
 ```typescript
@@ -207,7 +222,7 @@ When('I wait {int} milliseconds', async function (ms: number) {
 // At module level - BAD!
 const loginPage = new LoginPage(page) // page doesn't exist yet
 
-Given('I am on the login page', async function (this: ICustomWorld) {
+Given('I am on the login page', async function () {
   await loginPage.goto() // Uses wrong page instance
 })
 ```
@@ -433,6 +448,8 @@ When('I click login', ...)
 **✅ Better:**
 
 ```typescript
+import { When } from '../support/step-helpers.js'
+
 // More granular steps for flexibility
 When('I enter username {string}', ...)
 When('I enter password {string}', ...)
@@ -440,8 +457,7 @@ When('I click the login button', ...)
 
 // But also provide a composite step for common flows
 When('I login with username {string} and password {string}', async function(username, password) {
-  const page = getPage(this)
-  const loginPage = new LoginPage(page)
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.login(username, password)
 })
 ```
@@ -453,9 +469,8 @@ When('I login with username {string} and password {string}', async function(user
 **❌ Wrong:**
 
 ```typescript
-When('I click the login button', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  const loginPage = new LoginPage(page)
+When('I click the login button', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.clickLogin()
 
   // Assertion in When step - WRONG!
@@ -466,16 +481,16 @@ When('I click the login button', async function (this: ICustomWorld) {
 **✅ Correct:**
 
 ```typescript
-When('I click the login button', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  const loginPage = new LoginPage(page)
+import { When, Then } from '../support/step-helpers.js'
+
+When('I click the login button', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.clickLogin()
   // No assertion - just action
 })
 
-Then('I should see the secure area page', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  const loginPage = new LoginPage(page)
+Then('I should see the secure area page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   expect(await loginPage.isOnSecureArea()).toBeTruthy()
 })
 ```
@@ -521,9 +536,10 @@ export class LoginPage {
 }
 
 // Assertion goes in step definition
-Then('I should see the secure area page', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  const loginPage = new LoginPage(page)
+import { Then } from '../support/step-helpers.js'
+
+Then('I should see the secure area page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   expect(await loginPage.isOnSecureArea()).toBeTruthy()
 })
 ```
