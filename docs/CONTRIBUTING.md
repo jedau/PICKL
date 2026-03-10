@@ -263,6 +263,7 @@ Since breakpoints in page objects don't always work reliably, use **F11 (Step In
 
 ```typescript
 // test/steps/login.steps.ts
+import { When } from '../support/step-helpers'
 When('I enter username {string}', async function (username: string) {
   const loginPage = this.getPageObject(LoginPage)
   await loginPage.enterUsername(username) // <-- Set breakpoint here, press F11 to step into

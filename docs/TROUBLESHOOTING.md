@@ -127,8 +127,12 @@ Error: Page is not initialized
 
 **Solution**:
 
+**Option 1: Manual check (verbose)**
+
 ```typescript
-// Always check if page is initialized
+import { Given } from '@cucumber/cucumber'
+import type { ICustomWorld } from '../support/world.js'
+
 Given('I am on the login page', async function (this: ICustomWorld) {
   if (!this.page) {
     throw new Error('Page is not initialized. Ensure Before hook has run.')
@@ -136,8 +140,11 @@ Given('I am on the login page', async function (this: ICustomWorld) {
   const loginPage = new LoginPage(this.page)
   await loginPage.goto()
 })
+```
 
-// ✅ Best - use getPageObject helper
+**Option 2: Use getPageObject helper (recommended)**
+
+```typescript
 import { Given } from '../support/step-helpers.js'
 
 Given('I am on the login page', async function () {
@@ -145,6 +152,13 @@ Given('I am on the login page', async function () {
   await loginPage.goto()
 })
 ```
+
+**Why Option 2 is better:**
+
+- ✅ Eliminates boilerplate (no manual null checks)
+- ✅ No explicit `this: ICustomWorld` typing needed
+- ✅ Clear error messages built-in
+- ✅ Consistent pattern across all step definitions
 
 **Prevention**: To avoid this error, always check page initialization. See [Common Mistakes - Not checking page initialization](COMMON-MISTAKES.md#mistake-5-not-checking-page-initialization).
 
@@ -871,7 +885,7 @@ rules: {
 | `strictTypeChecked`           | ✅ Yes                  | ❌ No         |
 | Manual `no-unsafe-assignment` | ✅ Yes                  | ❌ No         |
 
-**Bottom line**: The code works both ways - explicit types are only needed if you're using stricter ESLint rules than PICKL's defaults. Use whichever style matches your project's linting configuration.
+**Cause**: In strict TypeScript/ESLint setups, `process.env` values are typed as `string | undefined`. Assigning them directly to a `string` (or using a non-null assertion `!`) without handling the `undefined` case can be flagged by the type checker and by rules such as `@typescript-eslint/no-non-null-assertion`, and is considered unsafe unless you perform runtime validation.
 
 ---
 

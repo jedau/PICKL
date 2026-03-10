@@ -33,6 +33,8 @@ Given('I am on the login page', async function () {
 **✅ Correct:**
 
 ```typescript
+import { Given } from '../support/step-helpers.js'
+
 Given('I am on the login page', async function () {
   const loginPage = this.getPageObject(LoginPage)
   await loginPage.goto() // With await
@@ -119,6 +121,8 @@ When('I fill the login form', async function () {
 **✅ Correct:**
 
 ```typescript
+import { When } from '../support/step-helpers.js'
+
 When('I fill the login form', async function () {
   const loginPage = this.getPageObject(LoginPage)
 
@@ -444,6 +448,8 @@ When('I click login', ...)
 **✅ Better:**
 
 ```typescript
+import { When } from '../support/step-helpers.js'
+
 // More granular steps for flexibility
 When('I enter username {string}', ...)
 When('I enter password {string}', ...)
@@ -475,6 +481,8 @@ When('I click the login button', async function () {
 **✅ Correct:**
 
 ```typescript
+import { When, Then } from '../support/step-helpers.js'
+
 When('I click the login button', async function () {
   const loginPage = this.getPageObject(LoginPage)
   await loginPage.clickLogin()
@@ -528,6 +536,8 @@ export class LoginPage {
 }
 
 // Assertion goes in step definition
+import { Then } from '../support/step-helpers.js'
+
 Then('I should see the secure area page', async function () {
   const loginPage = this.getPageObject(LoginPage)
   expect(await loginPage.isOnSecureArea()).toBeTruthy()

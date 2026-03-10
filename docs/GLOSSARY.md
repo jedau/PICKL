@@ -262,6 +262,8 @@ The JavaScript/TypeScript code that implements a Gherkin step. Uses regular expr
 **Example:**
 
 ```typescript
+import { Given } from '../support/step-helpers.js'
+
 Given('I am on the login page', async function () {
   const loginPage = this.getPageObject(LoginPage)
   await loginPage.goto()
@@ -271,6 +273,8 @@ Given('I am on the login page', async function () {
 **Pattern matching:**
 
 ```typescript
+import { When } from '../support/step-helpers.js'
+
 // Cucumber Expression with parameter
 When('I enter username {string}', async function (username: string) {
   await loginPage.enterUsername(username)
@@ -617,6 +621,8 @@ export interface ICustomWorld extends World {
 **Usage:**
 
 ```typescript
+import { Given } from '../support/step-helpers.js'
+
 Given('I am on the login page', async function () {
   // Access page from World using helper methods
   const loginPage = this.getPageObject(LoginPage)

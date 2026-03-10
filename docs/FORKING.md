@@ -112,7 +112,7 @@ Best for testing against **your own application** or using **sensitive URLs**.
 #### 2. Add Your BASE_URL Secret
 
 - **Name:** `BASE_URL`
-- **Value:** `<BASE_URL-FROM-YOUR-ENV-FILE>`
+- **Value:** `https://your-app.example.com` (replace with your actual BASE_URL from `.env`)
 - Click **Add secret**
 
 #### 3. Update CI Workflow to Use Secret
