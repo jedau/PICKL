@@ -112,7 +112,7 @@ Best for testing against **your own application** or using **sensitive URLs**.
 #### 2. Add Your BASE_URL Secret
 
 - **Name:** `BASE_URL`
-- **Value:** `https://your-app.example.com`
+- **Value:** `<BASE_URL-FROM-YOUR-ENV-FILE>`
 - Click **Add secret**
 
 #### 3. Update CI Workflow to Use Secret
@@ -357,16 +357,89 @@ git push origin main
 
 ### Handling Conflicts
 
-If you have conflicts:
+If you have conflicts during merge:
 
 ```bash
 # During merge, Git will show conflicted files
 git status
+# Shows files with conflicts marked as "both modified"
 
-# Edit conflicted files, then:
+# 1. Open and resolve conflicts in each file
+#    Look for conflict markers: <<<<<<<, =======, >>>>>>>
+#    Edit files to resolve conflicts, remove markers
+
+# 2. Stage the resolved files
 git add <resolved-files>
+# Or stage all resolved files:
+git add .
+
+# 3. Complete the merge
+git commit -m "chore: merge upstream changes"
+# Or if Git already prepared a merge message:
+git merge --continue
+
+# 4. Push to your fork
+git push origin main
+```
+
+**If you get "Direct commits to main branch are not allowed":**
+
+This means your fork has **branch protection rules** enabled. You have two options:
+
+**Option 1: Use a branch and PR workflow (Recommended)**
+
+```bash
+# If you're in the middle of a merge on main:
+git merge --abort  # Cancel the merge first
+
+# Create a branch for syncing
+git checkout -b sync-upstream-$(date +%Y%m%d)
+
+# Merge upstream changes
+git merge upstream/main
+
+# Resolve conflicts (if any), then:
+git add .
+git commit -m "chore: merge upstream changes"
+
+# Push the branch
+git push origin sync-upstream-$(date +%Y%m%d)
+
+# Then on GitHub:
+# 1. Go to your fork on GitHub
+# 2. Click "Compare & pull request"
+# 3. Make sure it's YOUR-USERNAME/main ← YOUR-USERNAME/sync-upstream-YYYYMMDD
+# 4. Merge the PR (you're merging to your own fork)
+```
+
+**Option 2: Temporarily disable branch protection**
+
+```bash
+# On GitHub:
+# 1. Go to your fork → Settings → Branches
+# 2. Find the branch protection rule for "main"
+# 3. Click "Edit" or "Delete" to remove/disable it
+# 4. Now you can push directly to main:
+
+git add .
 git commit -m "chore: merge upstream changes"
 git push origin main
+
+# 5. Re-enable branch protection after pushing (if desired)
+```
+
+**Check merge status:**
+
+```bash
+# See if you're in the middle of a merge
+git status
+# Look for: "You have unmerged paths" or "All conflicts fixed but you are still merging"
+
+# See which files have conflicts
+git diff --name-only --diff-filter=U
+
+# Abort a merge if you want to start over
+git merge --abort
 ```
 
 ### Stay on Older Version

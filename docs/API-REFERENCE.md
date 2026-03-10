@@ -424,6 +424,8 @@ Custom World class that extends Cucumber's base World, providing typed access to
 interface ICustomWorld extends World {
   page?: Page
   context?: BrowserContext
+  getPage(): Page
+  getPageObject<T>(PageClass: new (page: Page) => T): T
 }
 ```
 
@@ -431,6 +433,11 @@ interface ICustomWorld extends World {
 
 - `page` (Page | undefined): Playwright Page instance for browser automation
 - `context` (BrowserContext | undefined): Playwright BrowserContext for managing browser state
+
+**Methods**:
+
+- `getPage()`: Gets the Page instance with validation (throws if not initialized)
+- `getPageObject<T>(PageClass)`: Creates and returns a page object instance with automatic page injection
 
 #### Class: CustomWorld
 
@@ -448,14 +455,81 @@ constructor(options: IWorldOptions)
 
 - `options` (IWorldOptions): World options provided by Cucumber
 
+#### Methods
+
+##### `getPage()`
+
+Gets the Playwright Page instance with validation.
+
+**Returns**: `Page`
+
+**Throws**: Error if page is not initialized
+
+**Usage**:
+
+```typescript
+Given('I wait for {int} milliseconds', async function (ms: number) {
+  const page = this.getPage()
+  await page.waitForTimeout(ms)
+})
+```
+
+---
+
+##### `getPageObject<T>(PageClass)`
+
+Creates and returns a page object instance with automatic page injection. This is the recommended pattern for working with page objects.
+
+**Type Parameters**:
+
+- `T`: The page object class type (inferred from PageClass)
+
+**Parameters**:
+
+- `PageClass` (new (page: Page) => T): The page object class constructor
+
+**Returns**: `T` - Instance of the page object
+
+**Throws**: Error if page is not initialized
+
+**Basic Usage**:
+
+```typescript
+Given('I am on the login page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
+  await loginPage.goto()
+})
+```
+
+**With Explicit Type (for strict ESLint configurations)**:
+
+```typescript
+// Only needed if using strict-type-checked ESLint or @typescript-eslint/no-unsafe-assignment rule
+// PICKL's default config (recommendedTypeChecked) doesn't require this
+Given('I am on the login page', async function () {
+  const loginPage = this.getPageObject<LoginPage>(LoginPage)
+  await loginPage.goto()
+})
+```
+
+**Note**: PICKL's default ESLint configuration uses `recommendedTypeChecked`, which allows type inference without explicit type parameters. The explicit type syntax is only needed if you're using stricter linting rules (like `strictTypeChecked`). See [Troubleshooting - ESLint unsafe assignment error](TROUBLESHOOTING.md#eslint-error-unsafe-assignment-of-any-value) for details.
+
+**Why use this over direct instantiation?**:
+
+- ✅ Automatic page validation (throws clear error if page not initialized)
+- ✅ Eliminates boilerplate code
+- ✅ Type-safe page object instantiation
+- ✅ Consistent pattern across all step definitions
+
+---
+
 **Usage in Step Definitions**:
 
 ```typescript
-import { Given } from '@cucumber/cucumber'
-import { ICustomWorld } from '../support/world.js'
+import { Given } from '../support/step-helpers.js'
 
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = this.page!
+Given('I am on the login page', async function () {
+  const page = this.getPage()
   await page.goto('/login')
 })
 ```
@@ -921,28 +995,24 @@ Feature: Login
     Then I should see the secure area page
 
 // 2. Step definitions
-import { Given, When, Then } from '@cucumber/cucumber'
+import { Given, When, Then } from '../support/step-helpers.js'
 import { expect } from '@playwright/test'
-import { ICustomWorld } from '../support/world.js'
 import { LoginPage } from '../../pages/LoginPage.js'
 
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+Given('I am on the login page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.goto()
 })
 
-When('I enter username {string}', async function (this: ICustomWorld, username: string) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+When('I enter username {string}', async function (username: string) {
+  const loginPage = this.getPageObject(LoginPage)
   await loginPage.enterUsername(username)
 })
 
 // ... more step definitions
 
-Then('I should see the secure area page', async function (this: ICustomWorld) {
-  const page = this.page!
-  const loginPage = new LoginPage(page)
+Then('I should see the secure area page', async function () {
+  const loginPage = this.getPageObject(LoginPage)
   const isSecure = await loginPage.isOnSecureArea()
   expect(isSecure).toBeTruthy()
 })

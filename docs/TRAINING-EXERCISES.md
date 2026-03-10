@@ -209,12 +209,11 @@ Feature: Dropdown Selection
 <summary>📝 Template</summary>
 
 ```typescript
-import { Given, When, Then } from '@cucumber/cucumber'
+import { Given, When, Then } from '../support/step-helpers.js'
 import { expect } from '@playwright/test'
-import { ICustomWorld } from '../support/world.js'
 import { DropdownPage } from '../../pages/DropdownPage.js'
 
-Given('I am on the dropdown page', async function (this: ICustomWorld) {
+Given('I am on the dropdown page', async function () {
   // TODO: Implement
 })
 

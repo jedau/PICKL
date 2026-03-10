@@ -137,12 +137,11 @@ Given('I am on the login page', async function (this: ICustomWorld) {
   await loginPage.goto()
 })
 
-// Or use a helper
-import { getPage } from '../support/step-helpers.js'
+// ✅ Best - use getPageObject helper
+import { Given } from '../support/step-helpers.js'
 
-Given('I am on the login page', async function (this: ICustomWorld) {
-  const page = getPage(this) // Throws if page not initialized
-  const loginPage = new LoginPage(page)
+Given('I am on the login page', async function () {
+  const loginPage = this.getPageObject(LoginPage) // Throws if page not initialized
   await loginPage.goto()
 })
 ```
@@ -220,19 +219,15 @@ Received string:    "Your username is invalid!"
 import Debug from 'debug'
 const debug = Debug('test:steps')
 
-Then(
-  'I should see a success message {string}',
-  async function (this: ICustomWorld, expectedMessage: string) {
-    const page = getPage(this)
-    const loginPage = new LoginPage(page)
-    const actualMessage = await loginPage.getFlashMessage()
+Then('I should see a success message {string}', async function (expectedMessage: string) {
+  const loginPage = this.getPageObject(LoginPage)
+  const actualMessage = await loginPage.getFlashMessage()
 
-    debug('Expected:', expectedMessage)
-    debug('Actual:', actualMessage)
+  debug('Expected:', expectedMessage)
+  debug('Actual:', actualMessage)
 
-    expect(actualMessage).toContain(expectedMessage)
-  },
-)
+  expect(actualMessage).toContain(expectedMessage)
+})
 ```
 
 **Common Causes**:
@@ -515,15 +510,15 @@ await page.waitForLoadState('networkidle') // ✅ Fast
 
 ```typescript
 // ❌ Missing await - step completes immediately
-When('I click login', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  page.click('#login') // Missing await!
+When('I click login', async function () {
+  const loginPage = this.getPageObject(LoginPage)
+  loginPage.clickLogin() // Missing await!
 })
 
 // ✅ With await
-When('I click login', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  await page.click('#login')
+When('I click login', async function () {
+  const loginPage = this.getPageObject(LoginPage)
+  await loginPage.clickLogin()
 })
 ```
 
@@ -811,9 +806,126 @@ const loginPage = new LoginPage(this.page)
 // ✅ Or use non-null assertion (if you're sure)
 const loginPage = new LoginPage(this.page!)
 
-// ✅ Best - use helper
-const page = getPage(this)
-const loginPage = new LoginPage(page)
+// ✅ Best - use getPageObject helper
+const loginPage = this.getPageObject(LoginPage)
+```
+
+---
+
+### ESLint Error: "Unsafe assignment of any value"
+
+**Symptom**:
+
+```typescript
+// ESLint error: Unsafe assignment of an any value (@typescript-eslint/no-unsafe-assignment)
+const loginPage = this.getPageObject(LoginPage)
+```
+
+**Cause**: This error doesn't occur in PICKL's default configuration but can appear if you've customized your ESLint settings. PICKL uses `recommendedTypeChecked` from `typescript-eslint`, which does NOT include the stricter `no-unsafe-*` rules. This error typically appears when:
+
+- Using `typescript-eslint`'s **`strict-type-checked`** configuration
+- Manually enabling `@typescript-eslint/no-unsafe-assignment` rule
+- Your IDE/editor has stricter default ESLint settings
+
+**Why PICKL doesn't have this issue**:
+
+```javascript
+// eslint.config.js
+...tseslint.configs.recommendedTypeChecked  // ✅ PICKL uses this (lenient)
+// NOT using: tseslint.configs.strictTypeChecked  // ❌ Would require explicit types
+```
+
+**Solution for strict mode**:
+
+```typescript
+// ✅ Explicitly provide the type parameter
+const loginPage = this.getPageObject<LoginPage>(LoginPage)
+await loginPage.goto()
+```
+
+**Why it works**: Explicitly specifying the generic type parameter helps TypeScript's type inference, ensuring the return type is correctly typed as `LoginPage` instead of `any`.
+
+**Alternative - Check your ESLint config**:
+
+```javascript
+// If you want to match PICKL's behavior, use recommendedTypeChecked instead of strictTypeChecked
+export default [
+  ...tseslint.configs.recommendedTypeChecked, // ✅ PICKL's default (no explicit types needed)
+  // ...tseslint.configs.strictTypeChecked,   // ❌ Requires explicit types
+]
+```
+
+Or disable the specific rule:
+
+```javascript
+rules: {
+  '@typescript-eslint/no-unsafe-assignment': 'off',  // If you prefer PICKL's behavior
+}
+```
+
+**Configuration comparison**:
+
+| ESLint Config                 | Explicit Type Required? | PICKL Default |
+| ----------------------------- | ----------------------- | ------------- |
+| `recommendedTypeChecked`      | ❌ No                   | ✅ Yes        |
+| `strictTypeChecked`           | ✅ Yes                  | ❌ No         |
+| Manual `no-unsafe-assignment` | ✅ Yes                  | ❌ No         |
+
+**Bottom line**: The code works both ways - explicit types are only needed if you're using stricter ESLint rules than PICKL's defaults. Use whichever style matches your project's linting configuration.
+
+---
+
+### ESLint Error: "Unsafe assignment" on process.env variables
+
+**Symptom**:
+
+```typescript
+// ESLint error on these lines:
+const username = process.env.ADMIN_USERNAME!
+const password = process.env.ADMIN_PASSWORD!
+```
+
+**Cause**: In strict TypeScript/ESLint mode, `process.env` values are typed as `string | undefined`, and the non-null assertion (`!`) doesn't satisfy the `no-unsafe-assignment` rule.
+
+**Solution - Explicitly type the variables**:
+
+```typescript
+// ✅ Option 1: Explicit type annotation
+const username: string = process.env.ADMIN_USERNAME!
+const password: string = process.env.ADMIN_PASSWORD!
+
+// ✅ Option 2: Type assertion
+const username = process.env.ADMIN_USERNAME as string
+const password = process.env.ADMIN_PASSWORD as string
+
+// ✅ Option 3: With runtime validation (safest)
+const username = process.env.ADMIN_USERNAME
+if (!username) {
+  throw new Error('ADMIN_USERNAME is not defined')
+}
+const password = process.env.ADMIN_PASSWORD
+if (!password) {
+  throw new Error('ADMIN_PASSWORD is not defined')
+}
+// Now TypeScript knows they're strings
+```
+
+**Full example with all fixes**:
+
+```typescript
+Given('the admin user login to Orangehrm site', async function () {
+  const loginPage = this.getPageObject<LoginPage>(LoginPage)
+
+  // Explicitly type process.env values
+  const username: string = process.env.ADMIN_USERNAME!
+  const password: string = process.env.ADMIN_PASSWORD!
+
+  await loginPage.goto()
+  await loginPage.login(username, password)
+
+  const isLandingDashboardPage = await loginPage.isOnPage('Dashboard')
+  expect(isLandingDashboardPage).toBeTruthy()
+})
 ```
 
 ---
@@ -912,9 +1024,9 @@ Set breakpoints and press F5!
 import Debug from 'debug'
 const debug = Debug('test:steps')
 
-Then('I should see success message', async function (this: ICustomWorld) {
-  const page = getPage(this)
-  const loginPage = new LoginPage(page)
+Then('I should see success message', async function () {
+  const loginPage = this.getPageObject(LoginPage)
+  const page = this.getPage()
 
   debug('Current URL:', page.url())
   debug('Page title:', await page.title())
