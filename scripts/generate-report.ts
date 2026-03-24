@@ -1,6 +1,6 @@
 import { exec } from 'child_process'
 import { generate } from 'cucumber-html-reporter'
-import { existsSync, readFileSync, rmSync, writeFileSync } from 'fs'
+import { readFileSync, rmSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 
 const options = {
@@ -24,16 +24,12 @@ const options = {
 
 // Clean previous report to avoid stale data
 const reportPath = './test-results/html-report'
-if (existsSync(reportPath)) {
-  rmSync(reportPath, { recursive: true, force: true })
-}
+rmSync(reportPath, { recursive: true, force: true })
 
 // Clean any stray JSON files
 const strayJsonFiles = ['./test-results/direct.json']
 strayJsonFiles.forEach(file => {
-  if (existsSync(file)) {
-    rmSync(file, { force: true })
-  }
+  rmSync(file, { force: true })
 })
 
 // Generate report
@@ -41,7 +37,7 @@ generate(options)
 
 // Customize the generated HTML
 const reportFile = './test-results/html-report/index.html'
-if (existsSync(reportFile)) {
+try {
   let htmlContent = readFileSync(reportFile, 'utf8')
 
   // Replace external favicon with pickle emoji
@@ -192,6 +188,9 @@ if (existsSync(reportFile)) {
   htmlContent = htmlContent.replace('PICKL Test Results', toggleButton)
 
   writeFileSync(reportFile, htmlContent, 'utf8')
+} catch (error) {
+  console.error('Failed to customize report HTML:', error)
+  console.warn('Report generated but customizations were not applied')
 }
 
 // Auto-open the report in the default browser
