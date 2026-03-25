@@ -1,4 +1,4 @@
-import { exec } from 'child_process'
+import { execFile } from 'child_process'
 import { generate } from 'cucumber-html-reporter'
 import { readFileSync, rmSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
@@ -195,16 +195,16 @@ try {
 
 // Auto-open the report in the default browser
 const reportIndexPath = resolve('./test-results/html-report/index.html')
+
+// Use execFile to avoid shell injection vulnerabilities
+const isWindows = process.platform === 'win32'
+const isMac = process.platform === 'darwin'
+
 const fileUrl = `file:///${reportIndexPath.replace(/\\/g, '/')}`
+const command = isWindows ? 'powershell' : isMac ? 'open' : 'xdg-open'
+const args = isWindows ? ['-Command', 'Start-Process', fileUrl] : [reportIndexPath]
 
-const openCommand =
-  process.platform === 'win32'
-    ? `powershell -Command "Start-Process '${fileUrl}'"`
-    : process.platform === 'darwin'
-      ? `open ${reportIndexPath}`
-      : `xdg-open ${reportIndexPath}`
-
-exec(openCommand, error => {
+execFile(command, args, error => {
   if (error) {
     console.error(`Report location: ${reportIndexPath}`)
     console.error('(Could not auto-open browser - please open manually)')
