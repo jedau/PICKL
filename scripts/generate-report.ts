@@ -200,9 +200,8 @@ const reportIndexPath = resolve('./test-results/html-report/index.html')
 const isWindows = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
 
-const fileUrl = `file:///${reportIndexPath.replace(/\\/g, '/')}`
 const command = isWindows ? 'powershell' : isMac ? 'open' : 'xdg-open'
-const args = isWindows ? ['-Command', 'Start-Process', fileUrl] : [reportIndexPath]
+const args = isWindows ? ['-Command', 'Start-Process', reportIndexPath] : [reportIndexPath]
 
 execFile(command, args, error => {
   if (error) {
