@@ -66,24 +66,44 @@ const nodeOptions = existingNodeOptions
 
 try {
   // Use execFileSync with separate arguments array (no shell, no injection risk)
-  execFileSync('node', [cucumberPath, ...args], {
+  // Use process.execPath to ensure same Node.js binary (avoids PATH manipulation)
+  execFileSync(process.execPath, [cucumberPath, ...args], {
     stdio: 'inherit',
     env: {
       ...process.env,
       NODE_OPTIONS: nodeOptions,
     },
   })
-} catch {
-  // Provide helpful context - the actual error was already displayed above via stdio: 'inherit'
+} catch (error) {
+  // Capture error details for proper debugging
+  const err = error as Error & { code?: string; status?: number }
+
   console.error('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
   console.error('❌ TEST EXECUTION FAILED')
   console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.error('\n⚠️  The actual error is displayed above.')
-  console.error('\nCommon issues to check:')
-  console.error('  • Feature file syntax errors (indentation, keywords, colons)')
-  console.error('  • Missing step definitions')
-  console.error('  • Browser/Playwright installation issues')
-  console.error('  • Incorrect tags or feature file paths\n')
+
+  // If the error occurred before spawning (e.g., file not found, permission denied)
+  if (err.code && err.code !== 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER') {
+    console.error('\n❌ Failed to execute test runner:')
+    console.error(`   Error: ${err.message}`)
+    if (err.code) {
+      console.error(`   Code: ${err.code}`)
+    }
+    console.error('\n💡 Possible causes:')
+    console.error('  • Node.js binary not found or not executable')
+    console.error('  • Cucumber binary path is incorrect')
+    console.error('  • Permission denied to execute files')
+    console.error(`  • Tried to execute: ${process.execPath}`)
+    console.error(`  • With cucumber at: ${cucumberPath}\n`)
+  } else {
+    // Test execution started but failed (cucumber ran but tests failed)
+    console.error('\n⚠️  Test failures or errors occurred during execution.')
+    console.error('\nCommon issues to check:')
+    console.error('  • Feature file syntax errors (indentation, keywords, colons)')
+    console.error('  • Missing step definitions')
+    console.error('  • Browser/Playwright installation issues')
+    console.error('  • Incorrect tags or feature file paths\n')
+  }
 
   process.exit(1)
 }
