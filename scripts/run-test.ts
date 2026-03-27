@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from 'child_process'
 import 'dotenv/config'
+import { existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -64,6 +65,18 @@ const nodeOptions = existingNodeOptions
   ? `${baseNodeOptions} ${existingNodeOptions}`
   : baseNodeOptions
 
+// Validate cucumber binary exists before attempting execution
+if (!existsSync(cucumberPath)) {
+  console.error('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+  console.error('❌ SETUP ERROR: Cucumber binary not found')
+  console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+  console.error(`\n❌ Cucumber binary does not exist at:`)
+  console.error(`   ${cucumberPath}\n`)
+  console.error('💡 Please ensure dependencies are installed:')
+  console.error('   npm install\n')
+  process.exit(1)
+}
+
 try {
   // Use execFileSync with separate arguments array (no shell, no injection risk)
   // Use process.execPath to ensure same Node.js binary (avoids PATH manipulation)
@@ -76,22 +89,33 @@ try {
   })
 } catch (error) {
   // Capture error details for proper debugging
-  const err = error as Error & { code?: string; status?: number }
+  const err = error as Error & { code?: string; status?: number; stderr?: Buffer | string }
 
   console.error('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
   console.error('❌ TEST EXECUTION FAILED')
   console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
+  // Check if this is a setup/execution problem vs actual test failures
+  const isModuleNotFound =
+    err.message?.includes('Cannot find module') ||
+    err.message?.includes('MODULE_NOT_FOUND') ||
+    err.message?.includes('ENOENT')
+  const isSetupError = err.code && err.code !== 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER'
+
   // If the error occurred before spawning (e.g., file not found, permission denied)
-  if (err.code && err.code !== 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER') {
+  // OR if Node reported a module not found error
+  if (isSetupError || isModuleNotFound) {
     console.error('\n❌ Failed to execute test runner:')
     console.error(`   Error: ${err.message}`)
     if (err.code) {
       console.error(`   Code: ${err.code}`)
     }
     console.error('\n💡 Possible causes:')
+    if (isModuleNotFound) {
+      console.error('  • Cucumber dependencies missing or corrupted')
+      console.error('  • Run: npm install')
+    }
     console.error('  • Node.js binary not found or not executable')
-    console.error('  • Cucumber binary path is incorrect')
     console.error('  • Permission denied to execute files')
     console.error(`  • Tried to execute: ${process.execPath}`)
     console.error(`  • With cucumber at: ${cucumberPath}\n`)
