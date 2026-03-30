@@ -1,8 +1,8 @@
 name: CI
 
-# Runs on all branch pushes and PRs targeting main
 on:
   push:
+    branches: [main]
   pull_request:
     branches: [main]
 
