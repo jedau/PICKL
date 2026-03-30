@@ -181,8 +181,8 @@ jobs:
   coverage:
     name: Test Coverage
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule'
 
+    steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
