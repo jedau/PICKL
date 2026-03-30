@@ -8,6 +8,7 @@ on:
   schedule:
     # Run CodeQL analysis weekly on Mondays at 00:00 UTC
     - cron: '0 0 * * 1'
+  workflow_dispatch:
 
 jobs:
   validate-commits:
@@ -166,7 +167,7 @@ jobs:
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     permissions:
       actions: read
       contents: read
