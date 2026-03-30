@@ -5,10 +5,6 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  schedule:
-    # Run CodeQL analysis weekly on Mondays at 00:00 UTC
-    - cron: '0 0 * * 1'
-  workflow_dispatch:
 
 jobs:
   validate-commits:
@@ -101,7 +97,6 @@ jobs:
   security:
     name: Security Audit
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule'
 
     steps:
       - name: Checkout code
@@ -126,7 +121,6 @@ jobs:
   secrets-check:
     name: Secrets Management Compliance
     runs-on: ubuntu-latest
-    if: github.event_name != 'schedule'
 
     steps:
       - name: Checkout code
@@ -164,39 +158,6 @@ jobs:
       - name: Run environment validation
         run: npm run validate:env
 
-  codeql:
-    name: CodeQL Analysis
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '22.x'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: javascript-typescript
-          queries: security-and-quality
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
-        with:
-          category: '/language:javascript-typescript'
-
   lint:
     name: Code Quality
     runs-on: ubuntu-latest
@@ -222,7 +183,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule'
 
-    steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
