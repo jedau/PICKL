@@ -1,5 +1,6 @@
 name: CI
 
+# Runs on all branch pushes and PRs targeting main
 on:
   push:
   pull_request:
